@@ -2,13 +2,11 @@ package com.safetynet.alerts.service;
 
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.PersonRepository;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 
-@Data
 @Service
 public class PersonService {
 
@@ -19,17 +17,17 @@ public class PersonService {
         return personRepository.findAll();
     }
 
-    public Person savePerson(HashMap<String, String> input) {
+    public Person savePerson(Person input) {
 
         Person person = new Person();
 
-        person.setFirstName(input.get("firstName"));
-        person.setLastName(input.get("lastName"));
-        person.setAddress(input.get("address"));
-        person.setCity(input.get("city"));
-        person.setZip(input.get("zip"));
-        person.setPhone(input.get("phone"));
-        person.setEmail(input.get("email"));
+        person.setFirstName(input.getFirstName());
+        person.setLastName(input.getLastName());
+        person.setAddress(input.getAddress());
+        person.setCity(input.getCity());
+        person.setZip(input.getZip());
+        person.setPhone(input.getPhone());
+        person.setEmail(input.getEmail());
 
         return personRepository.save(person);
     }

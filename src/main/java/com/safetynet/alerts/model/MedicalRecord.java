@@ -18,7 +18,7 @@ public class MedicalRecord {
 
     private String lastName;
 
-    private String birthDate;
+    private String birthdate;
 
     @ElementCollection
     private List<String> medications;
