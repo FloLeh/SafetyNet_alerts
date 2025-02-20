@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class PersonService {
@@ -30,5 +31,9 @@ public class PersonService {
         person.setEmail(input.getEmail());
 
         return personRepository.save(person);
+    }
+
+    public List<Person> getByLastName(String lastName) {
+        return personRepository.findByLastName(lastName);
     }
 }

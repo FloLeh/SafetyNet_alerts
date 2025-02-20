@@ -31,4 +31,7 @@ public class MedicalRecordService {
         return medicalRecordRepository.save(medicalRecord);
     }
 
+    public List<MedicalRecord> getByLastName(String lastName) {
+        return medicalRecordRepository.findByLastName(lastName);
+    }
 }
