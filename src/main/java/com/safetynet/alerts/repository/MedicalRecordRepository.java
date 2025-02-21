@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface MedicalRecordRepository extends CrudRepository<MedicalRecord, Long> {
-    List<MedicalRecord> findByLastName(String lastName);
+    Iterable<MedicalRecord> findByLastName(String lastName);
+    Iterable<MedicalRecord> findByLastNameIn(List<String> lastNames);
 }

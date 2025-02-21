@@ -1,6 +1,6 @@
 package com.safetynet.alerts.controller;
 
-import com.safetynet.alerts.dto.PersonDTO;
+import com.safetynet.alerts.dto.PersonInfosDTO;
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.service.MedicalRecordService;
@@ -19,10 +19,8 @@ public class PersonController {
 
     @Autowired
     private PersonService personService;
-
     @Autowired
     private MedicalRecordService medicalRecordService;
-
     @Autowired
     private DataMapper dataMapper;
 
@@ -32,23 +30,8 @@ public class PersonController {
     }
 
     @GetMapping("/personInfolastName={lastName}")
-    public List<PersonDTO> getPersonInfoLastName(@PathVariable String lastName) {
-        List<Person> persons =  personService.getByLastName(lastName);
-        List<MedicalRecord> medicalRecords = medicalRecordService.getByLastName(lastName);
-
-        List<PersonDTO> personsDTO = new ArrayList<>();
-
-        for (Person person : persons) {
-            for (MedicalRecord medicalRecord : medicalRecords) {
-                if (person.getLastName().equals(medicalRecord.getLastName()) &&
-                        person.getFirstName().equals(medicalRecord.getFirstName())
-                ) {
-                    personsDTO.add(dataMapper.personAndMedicalRecordToPersonDTO(person, medicalRecord));
-                }
-            }
-        }
-
-        return personsDTO;
+    public List<PersonInfosDTO> getPersonInfoLastName(@PathVariable String lastName) {
+        return personService.getPersonInfoFromLastName(lastName);
     }
 
 }

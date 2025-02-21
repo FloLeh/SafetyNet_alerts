@@ -2,8 +2,9 @@ package com.safetynet.alerts.dto;
 
 import java.util.List;
 
-public record PersonDTO(
-        String fullName,
+public record PersonInfosDTO(
+        String firstName,
+        String lastName,
         String address,
         int age,
         String email,

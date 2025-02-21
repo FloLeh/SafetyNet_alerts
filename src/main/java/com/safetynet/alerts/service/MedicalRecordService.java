@@ -5,9 +5,6 @@ import com.safetynet.alerts.repository.MedicalRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-
 @Service
 public class MedicalRecordService {
 
@@ -31,7 +28,7 @@ public class MedicalRecordService {
         return medicalRecordRepository.save(medicalRecord);
     }
 
-    public List<MedicalRecord> getByLastName(String lastName) {
+    public Iterable<MedicalRecord> getByLastName(String lastName) {
         return medicalRecordRepository.findByLastName(lastName);
     }
 }

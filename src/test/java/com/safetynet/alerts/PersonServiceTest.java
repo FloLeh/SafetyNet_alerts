@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,14 +18,14 @@ public class PersonServiceTest {
 
     @Test
     public void testSavePerson() {
-        HashMap<String, String> input = new HashMap<>();
-        input.put("firstName", "John");
-        input.put("lastName", "Smith");
-        input.put("address", "123 Main St.");
-        input.put("city", "New York");
-        input.put("zip", "44444");
-        input.put("phone", "1213131313");
-        input.put("email", "john.smith@gmail.com");
+        Person input = new Person();
+        input.setFirstName("John");
+        input.setLastName("Smith");
+        input.setAddress("123 Main St.");
+        input.setCity("New York");
+        input.setZip("44444");
+        input.setPhone("1213131313");
+        input.setEmail("john.smith@gmail.com");
 
         Person person = personService.savePerson(input);
 
