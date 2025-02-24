@@ -8,7 +8,7 @@ import java.util.List;
 public record ChildDTO(
         String firstName,
         String lastName,
-        int age,
+        String age,
         List<Person> householdMembers
 ) {
 }

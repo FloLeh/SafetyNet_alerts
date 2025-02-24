@@ -26,4 +26,9 @@ public class FireStationController {
         return fireStationService.getPhoneNumbersByFireStation(firestation);
     }
 
+    @GetMapping("/fire")
+    public List<Object> getFireStationResidents(@RequestParam String address) {
+        return fireStationService.getFireStationResidents(address);
+    }
+
 }

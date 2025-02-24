@@ -1,8 +1,10 @@
 package com.safetynet.alerts.service;
 
 import com.safetynet.alerts.model.FireStation;
+import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.FireStationRepository;
+import com.safetynet.alerts.repository.MedicalRecordRepository;
 import com.safetynet.alerts.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,10 @@ public class FireStationService {
     private FireStationRepository fireStationRepository;
     @Autowired
     private PersonRepository personRepository;
+    @Autowired
+    private MedicalRecordRepository medicalRecordRepository;
+    @Autowired
+    private DataMapper dataMapper;
 
     public List<FireStation> getAllFireStations() {
         return (List<FireStation>) fireStationRepository.findAll();
@@ -43,4 +49,11 @@ public class FireStationService {
         return phoneNumbers.stream().distinct().toList();
     }
 
+    public List<Object> getFireStationResidents(String address) {
+        FireStation fireStation = fireStationRepository.findFirstByAddress(address);
+        List<Person> persons = personRepository.findByAddress(address);
+        List<MedicalRecord> medicalRecords = medicalRecordRepository.findByLastNameIn(persons.stream().map(Person::getLastName).toList());
+
+        return dataMapper.personWithMedicalRecordAndFireStationNumber(persons, medicalRecords, fireStation.getStation());
+    }
 }

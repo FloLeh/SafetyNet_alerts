@@ -11,7 +11,9 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DataMapper {
@@ -49,7 +51,7 @@ public class DataMapper {
         List<PersonInfosDTO> personInfosDTOS = personsAndMedicalRecordsToPersonDTO(persons, medicalRecords);
 
         List<PersonInfosDTO> children = personInfosDTOS.stream()
-                .filter(person -> person.age() < 18)
+                .filter(person -> Integer.parseInt(person.age()) < 18)
                 .toList();
 
         List<ChildDTO> childrenDTO = new ArrayList<>();
@@ -72,10 +74,33 @@ public class DataMapper {
         return childrenDTO;
     }
 
-    public int computeAgeFromBirthdate(String birthdate) {
+    public List<Object> personWithMedicalRecordAndFireStationNumber(List<Person> persons, List<MedicalRecord> medicalRecords, String station) {
+        List<Object> residents = new ArrayList<>();
+        for (Person person : persons) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("firstName", person.getFirstName());
+            map.put("lastName", person.getLastName());
+            map.put("phone", person.getPhone());
+
+            for (MedicalRecord medicalRecord : medicalRecords) {
+                if (person.getLastName().equals(medicalRecord.getLastName()) &&
+                        person.getFirstName().equals(medicalRecord.getFirstName())
+                ) {
+                    map.put("age", computeAgeFromBirthdate(medicalRecord.getBirthdate()));
+                    map.put("medications", medicalRecord.getMedications());
+                    map.put("allergies", medicalRecord.getAllergies());
+                    map.put("station", station);
+                    residents.add(map);
+                }
+            }
+        }
+        return residents;
+    }
+
+    public String computeAgeFromBirthdate(String birthdate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
-        return Period.between(LocalDate.parse(birthdate, formatter), LocalDate.now()).getYears();
+        return String.valueOf(Period.between(LocalDate.parse(birthdate, formatter), LocalDate.now()).getYears());
     }
 
 }

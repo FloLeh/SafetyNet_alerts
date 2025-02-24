@@ -48,10 +48,6 @@ public class PersonService {
         return dataMapper.personsAndMedicalRecordsToPersonDTO(persons, medicalRecords);
     }
 
-    public List<Person> getByAddress(String address) {
-        return personRepository.findByAddress(address);
-    }
-
     public List<ChildDTO> getChildrenFromAddress(String address) {
         List<Person> persons = personRepository.findByAddress(address);
 

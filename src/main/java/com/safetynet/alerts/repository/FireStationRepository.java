@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface FireStationRepository extends CrudRepository<FireStation, Long> {
     List<FireStation> findByStation(String station);
+
+    FireStation findFirstByAddress(String address);
 }
