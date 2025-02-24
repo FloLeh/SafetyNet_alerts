@@ -1,5 +1,6 @@
 package com.safetynet.alerts.service;
 
+import com.safetynet.alerts.dto.ChildDTO;
 import com.safetynet.alerts.dto.PersonInfosDTO;
 import com.safetynet.alerts.dto.FireStationResidentsDTO;
 import com.safetynet.alerts.model.MedicalRecord;
@@ -27,7 +28,7 @@ public class DataMapper {
         );
     }
 
-    public Iterable<PersonInfosDTO> personsAndMedicalRecordsToPersonDTO(Iterable<Person> persons, Iterable<MedicalRecord> medicalRecords) {
+    public List<PersonInfosDTO> personsAndMedicalRecordsToPersonDTO(Iterable<Person> persons, Iterable<MedicalRecord> medicalRecords) {
 
         List<PersonInfosDTO> personsInfosDTO = new ArrayList<>();
 
@@ -44,13 +45,31 @@ public class DataMapper {
         return personsInfosDTO;
     }
 
-    public FireStationResidentsDTO personToFireStationResidentDTO(Person person) {
-        return new FireStationResidentsDTO(
-          person.getFirstName(),
-          person.getLastName(),
-          person.getAddress(),
-          person.getPhone()
-        );
+    public List<ChildDTO> personsAndMedicalRecordsToChildDTO(List<Person> persons, List<MedicalRecord> medicalRecords) {
+        List<PersonInfosDTO> personInfosDTOS = personsAndMedicalRecordsToPersonDTO(persons, medicalRecords);
+
+        List<PersonInfosDTO> children = personInfosDTOS.stream()
+                .filter(person -> person.age() < 18)
+                .toList();
+
+        List<ChildDTO> childrenDTO = new ArrayList<>();
+        for (PersonInfosDTO child : children) {
+            List<Person> householdMembers = persons.stream()
+                    .filter(person ->
+                        person.getAddress().equals(child.address())
+                                && !(person.getFirstName().equals(child.firstName())
+                                    && person.getLastName().equals(child.lastName()))
+                    ).toList();
+
+            childrenDTO.add(new ChildDTO(
+                    child.firstName(),
+                    child.lastName(),
+                    child.age(),
+                    householdMembers
+            ));
+        }
+
+        return childrenDTO;
     }
 
     public int computeAgeFromBirthdate(String birthdate) {

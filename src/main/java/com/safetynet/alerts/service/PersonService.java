@@ -1,5 +1,6 @@
 package com.safetynet.alerts.service;
 
+import com.safetynet.alerts.dto.ChildDTO;
 import com.safetynet.alerts.dto.PersonInfosDTO;
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
@@ -21,8 +22,8 @@ public class PersonService {
     @Autowired
     private DataMapper dataMapper;
 
-    public Iterable<Person> getPersons() {
-        return personRepository.findAll();
+    public List<Person> getPersons() {
+        return (List<Person>) personRepository.findAll();
     }
 
     public Person savePerson(Person input) {
@@ -41,13 +42,29 @@ public class PersonService {
     }
 
     public List<PersonInfosDTO> getPersonInfoFromLastName(String lastName) {
-        Iterable<Person> persons =  personRepository.findByLastName(lastName);
-        Iterable<MedicalRecord> medicalRecords = medicalRecordRepository.findByLastName(lastName);
+        List<Person> persons =  personRepository.findByLastName(lastName);
+        List<MedicalRecord> medicalRecords = medicalRecordRepository.findByLastName(lastName);
 
-        return (List<PersonInfosDTO>) dataMapper.personsAndMedicalRecordsToPersonDTO(persons, medicalRecords);
+        return dataMapper.personsAndMedicalRecordsToPersonDTO(persons, medicalRecords);
     }
 
     public List<Person> getByAddress(String address) {
-        return (List<Person>) personRepository.findByAddress(address);
+        return personRepository.findByAddress(address);
+    }
+
+    public List<ChildDTO> getChildrenFromAddress(String address) {
+        List<Person> persons = personRepository.findByAddress(address);
+
+        List<String> lastNames = new ArrayList<>();
+        persons.forEach(person -> {
+            String lastName = person.getLastName();
+            if (!lastNames.contains(lastName)) {
+                lastNames.add(lastName);
+            }
+        });
+
+        List<MedicalRecord> medicalRecords = medicalRecordRepository.findByLastNameIn(lastNames);
+
+        return dataMapper.personsAndMedicalRecordsToChildDTO(persons, medicalRecords);
     }
 }
