@@ -31,12 +31,35 @@ public class FireStationService {
     }
 
     public FireStation saveFireStation(FireStation input) {
-        FireStation fireStation = new FireStation();
+        return fireStationRepository.save(input);
+    }
 
-        fireStation.setAddress(input.getAddress());
-        fireStation.setStation(input.getStation());
+    public FireStation updateFireStation(FireStation input) {
+        FireStation fireStation = fireStationRepository.findFirstByAddress(input.getAddress());
+        if (fireStation != null) {
+            if (input.getStation() != null) {
+                fireStation.setStation(input.getStation());
+            }
+            return fireStationRepository.save(fireStation);
+        }
+        return null;
+    }
 
-        return fireStationRepository.save(fireStation);
+    public void deleteFireStation(FireStation input) {
+        String address = input.getAddress();
+        String station = input.getStation();
+        if (address != null) {
+            FireStation fireStation = fireStationRepository.findFirstByAddress(address);
+            if (fireStation != null) {
+                fireStationRepository.delete(fireStation);
+            }
+        }
+        if (station != null) {
+            List<FireStation> fireStations = fireStationRepository.findByStation(station);
+            if (!fireStations.isEmpty()) {
+                fireStationRepository.deleteAll(fireStations);
+            }
+        }
     }
 
     public List<String> getPhoneNumbersByFireStation(String station) {
@@ -75,4 +98,5 @@ public class FireStationService {
 
         return dataMapper.residentsByFireStation(persons, medicalRecords);
     }
+
 }

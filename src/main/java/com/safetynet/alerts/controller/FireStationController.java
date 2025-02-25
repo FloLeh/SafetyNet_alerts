@@ -4,9 +4,7 @@ import com.safetynet.alerts.dto.ResidentDTO;
 import com.safetynet.alerts.model.FireStation;
 import com.safetynet.alerts.service.FireStationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +24,21 @@ public class FireStationController {
     @GetMapping("/firestation")
     public Map<String, Object> getResidentsByStation(@RequestParam String stationNumber) {
         return fireStationService.getResidentsByFireStation(stationNumber);
+    }
+
+    @PostMapping("/firestation")
+    public FireStation addFireStation(@RequestBody FireStation fireStation) {
+        return fireStationService.saveFireStation(fireStation);
+    }
+
+    @PutMapping("/firestation")
+    public FireStation updateFireStation(@RequestBody FireStation fireStation) {
+        return fireStationService.updateFireStation(fireStation);
+    }
+
+    @DeleteMapping("/firestation")
+    public void deleteFireStationByAddress(@RequestBody FireStation fireStation) {
+        fireStationService.deleteFireStation(fireStation);
     }
 
     @GetMapping("/phoneAlert")
