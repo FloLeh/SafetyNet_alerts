@@ -1,5 +1,6 @@
 package com.safetynet.alerts.service;
 
+import com.safetynet.alerts.dto.ResidentDTO;
 import com.safetynet.alerts.model.FireStation;
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FireStationService {
@@ -49,11 +51,18 @@ public class FireStationService {
         return phoneNumbers.stream().distinct().toList();
     }
 
-    public List<Object> getFireStationResidents(String address) {
+    public Map<String, Object> getFireStationResidents(String address) {
         FireStation fireStation = fireStationRepository.findFirstByAddress(address);
         List<Person> persons = personRepository.findByAddress(address);
         List<MedicalRecord> medicalRecords = medicalRecordRepository.findByLastNameIn(persons.stream().map(Person::getLastName).toList());
 
         return dataMapper.personWithMedicalRecordAndFireStationNumber(persons, medicalRecords, fireStation.getStation());
+    }
+
+    public Map<String, List<ResidentDTO>> getResidentsByFireStation(List<String> stations) {
+        List<FireStation> fireStations = fireStationRepository.getFireStationsByStationIn(stations);
+        List<Person> persons = personRepository.findByAddressIn(fireStations.stream().map(FireStation::getAddress).toList());
+        List<MedicalRecord> medicalRecords = medicalRecordRepository.findByLastNameIn(persons.stream().map(Person::getLastName).toList());
+        return dataMapper.residentsByFireStation(persons, medicalRecords, fireStations);
     }
 }

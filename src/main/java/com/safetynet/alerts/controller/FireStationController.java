@@ -1,5 +1,6 @@
 package com.safetynet.alerts.controller;
 
+import com.safetynet.alerts.dto.ResidentDTO;
 import com.safetynet.alerts.model.FireStation;
 import com.safetynet.alerts.service.FireStationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -27,8 +29,13 @@ public class FireStationController {
     }
 
     @GetMapping("/fire")
-    public List<Object> getFireStationResidents(@RequestParam String address) {
+    public Map<String, Object> getFireStationResidents(@RequestParam String address) {
         return fireStationService.getFireStationResidents(address);
+    }
+
+    @GetMapping("/flood/stations")
+    public Map<String, List<ResidentDTO>> getFireStationResidents(@RequestParam List<String> stations) {
+        return fireStationService.getResidentsByFireStation(stations);
     }
 
 }

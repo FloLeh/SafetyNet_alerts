@@ -2,7 +2,8 @@ package com.safetynet.alerts.service;
 
 import com.safetynet.alerts.dto.ChildDTO;
 import com.safetynet.alerts.dto.PersonInfosDTO;
-import com.safetynet.alerts.dto.FireStationResidentsDTO;
+import com.safetynet.alerts.dto.ResidentDTO;
+import com.safetynet.alerts.model.FireStation;
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
 import org.springframework.stereotype.Service;
@@ -74,23 +75,50 @@ public class DataMapper {
         return childrenDTO;
     }
 
-    public List<Object> personWithMedicalRecordAndFireStationNumber(List<Person> persons, List<MedicalRecord> medicalRecords, String station) {
-        List<Object> residents = new ArrayList<>();
+    public Map<String, Object> personWithMedicalRecordAndFireStationNumber(List<Person> persons, List<MedicalRecord> medicalRecords, String station) {
+        List<ResidentDTO> residents = residentsByMedicalRecord(persons, medicalRecords);
+        return Map.of(
+                "residents", residents,
+                "station", station
+        );
+    }
+
+    public Map<String, List<ResidentDTO>> residentsByFireStation(List<Person> persons, List<MedicalRecord> medicalRecords, List<FireStation> fireStations) {
+        Map<String, List<ResidentDTO>> residentsByAddress = new HashMap<>();
+        List<String> addresses = fireStations.stream().map(FireStation::getAddress).toList();
+
+        for (String address : addresses) {
+            List<Person> personsFiltered = persons.stream().filter(person -> person.getAddress().equals(address)).toList();
+            List<ResidentDTO> residents = residentsByMedicalRecord(personsFiltered, medicalRecords);
+
+            residentsByAddress.put(address, residents);
+        }
+
+        return residentsByAddress;
+    }
+
+    public List<ResidentDTO> residentsByMedicalRecord(List<Person> persons, List<MedicalRecord> medicalRecords) {
+        List<ResidentDTO> residents = new ArrayList<>();
         for (Person person : persons) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("firstName", person.getFirstName());
-            map.put("lastName", person.getLastName());
-            map.put("phone", person.getPhone());
+            String firstName = person.getFirstName();
+            String lastName = person.getLastName();
+            String phone = person.getPhone();
 
             for (MedicalRecord medicalRecord : medicalRecords) {
                 if (person.getLastName().equals(medicalRecord.getLastName()) &&
                         person.getFirstName().equals(medicalRecord.getFirstName())
                 ) {
-                    map.put("age", computeAgeFromBirthdate(medicalRecord.getBirthdate()));
-                    map.put("medications", medicalRecord.getMedications());
-                    map.put("allergies", medicalRecord.getAllergies());
-                    map.put("station", station);
-                    residents.add(map);
+                    String age = computeAgeFromBirthdate(medicalRecord.getBirthdate());
+                    List<String> medications = medicalRecord.getMedications();
+                    List<String> allergies = medicalRecord.getAllergies();
+                    residents.add(new ResidentDTO(
+                            firstName,
+                            lastName,
+                            phone,
+                            age,
+                            medications,
+                            allergies
+                    ));
                 }
             }
         }
