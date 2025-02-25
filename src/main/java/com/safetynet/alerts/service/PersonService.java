@@ -63,4 +63,10 @@ public class PersonService {
 
         return dataMapper.personsAndMedicalRecordsToChildDTO(persons, medicalRecords);
     }
+
+    public List<String> getCommunityEmailsByCity(String city) {
+        List<Person> persons = personRepository.findByCity(city);
+
+        return persons.stream().map(Person::getEmail).distinct().toList();
+    }
 }
