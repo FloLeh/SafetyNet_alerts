@@ -10,4 +10,5 @@ import java.util.List;
 public interface MedicalRecordRepository extends CrudRepository<MedicalRecord, Long> {
     List<MedicalRecord> findByLastName(String lastName);
     List<MedicalRecord> findByLastNameIn(List<String> lastNames);
+    List<MedicalRecord> findByLastNameInAndFirstNameIn(List<String> lastNames, List<String> firstNames);
 }

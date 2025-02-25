@@ -59,10 +59,20 @@ public class FireStationService {
         return dataMapper.personWithMedicalRecordAndFireStationNumber(persons, medicalRecords, fireStation.getStation());
     }
 
-    public Map<String, List<ResidentDTO>> getResidentsByFireStation(List<String> stations) {
+    public Map<String, List<ResidentDTO>> getHousesByFireStations(List<String> stations) {
         List<FireStation> fireStations = fireStationRepository.getFireStationsByStationIn(stations);
         List<Person> persons = personRepository.findByAddressIn(fireStations.stream().map(FireStation::getAddress).toList());
         List<MedicalRecord> medicalRecords = medicalRecordRepository.findByLastNameIn(persons.stream().map(Person::getLastName).toList());
-        return dataMapper.residentsByFireStation(persons, medicalRecords, fireStations);
+        return dataMapper.housesByFireStations(persons, medicalRecords, fireStations);
+    }
+
+    public Map<String, Object> getResidentsByFireStation(String stationNumber) {
+        List<FireStation> fireStations = fireStationRepository.findByStation(stationNumber);
+        List<Person> persons = personRepository.findByAddressIn(fireStations.stream().map(FireStation::getAddress).toList());
+        List<MedicalRecord> medicalRecords = medicalRecordRepository.findByLastNameInAndFirstNameIn(
+                persons.stream().map(Person::getLastName).toList(),
+                persons.stream().map(Person::getFirstName).toList());
+
+        return dataMapper.residentsByFireStation(persons, medicalRecords);
     }
 }

@@ -23,6 +23,11 @@ public class FireStationController {
         return fireStationService.getAllFireStations();
     }
 
+    @GetMapping("/firestation")
+    public Map<String, Object> getResidentsByStation(@RequestParam String stationNumber) {
+        return fireStationService.getResidentsByFireStation(stationNumber);
+    }
+
     @GetMapping("/phoneAlert")
     public List<String> getPhoneAlert(@RequestParam String firestation) {
         return fireStationService.getPhoneNumbersByFireStation(firestation);
@@ -35,7 +40,7 @@ public class FireStationController {
 
     @GetMapping("/flood/stations")
     public Map<String, List<ResidentDTO>> getFireStationResidents(@RequestParam List<String> stations) {
-        return fireStationService.getResidentsByFireStation(stations);
+        return fireStationService.getHousesByFireStations(stations);
     }
 
 }

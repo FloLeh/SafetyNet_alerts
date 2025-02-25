@@ -1,6 +1,7 @@
 package com.safetynet.alerts.service;
 
 import com.safetynet.alerts.dto.ChildDTO;
+import com.safetynet.alerts.dto.FireStationResidentsDTO;
 import com.safetynet.alerts.dto.PersonInfosDTO;
 import com.safetynet.alerts.dto.ResidentDTO;
 import com.safetynet.alerts.model.FireStation;
@@ -52,7 +53,7 @@ public class DataMapper {
         List<PersonInfosDTO> personInfosDTOS = personsAndMedicalRecordsToPersonDTO(persons, medicalRecords);
 
         List<PersonInfosDTO> children = personInfosDTOS.stream()
-                .filter(person -> Integer.parseInt(person.age()) < 18)
+                .filter(person -> Integer.parseInt(person.age()) <= 18)
                 .toList();
 
         List<ChildDTO> childrenDTO = new ArrayList<>();
@@ -83,7 +84,7 @@ public class DataMapper {
         );
     }
 
-    public Map<String, List<ResidentDTO>> residentsByFireStation(List<Person> persons, List<MedicalRecord> medicalRecords, List<FireStation> fireStations) {
+    public Map<String, List<ResidentDTO>> housesByFireStations(List<Person> persons, List<MedicalRecord> medicalRecords, List<FireStation> fireStations) {
         Map<String, List<ResidentDTO>> residentsByAddress = new HashMap<>();
         List<String> addresses = fireStations.stream().map(FireStation::getAddress).toList();
 
@@ -125,10 +126,34 @@ public class DataMapper {
         return residents;
     }
 
+    public List<FireStationResidentsDTO> personsToFireStationDTO(List<Person> persons) {
+        List<FireStationResidentsDTO> fireStationResidentsDTOs = new ArrayList<>();
+        for (Person person : persons) {
+            fireStationResidentsDTOs.add(new FireStationResidentsDTO(
+                    person.getFirstName(),
+                    person.getLastName(),
+                    person.getAddress(),
+                    person.getPhone()
+            ));
+        }
+        return fireStationResidentsDTOs;
+    }
+
+    public Map<String, Object> residentsByFireStation(List<Person> persons, List<MedicalRecord> medicalRecords) {
+        List<FireStationResidentsDTO> residents = personsToFireStationDTO(persons);
+        int adults = medicalRecords.stream().filter(medicalRecord -> Integer.parseInt(computeAgeFromBirthdate(medicalRecord.getBirthdate())) > 18).toList().size();
+        int children = medicalRecords.size() - adults;
+
+        return Map.of(
+                "residents", residents,
+                "adults", adults,
+                "children", children
+        );
+    }
+
     public String computeAgeFromBirthdate(String birthdate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
         return String.valueOf(Period.between(LocalDate.parse(birthdate, formatter), LocalDate.now()).getYears());
     }
-
 }
