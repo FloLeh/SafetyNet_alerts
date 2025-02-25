@@ -30,8 +30,8 @@ public class PersonController {
         personService.deletePerson(firstName, lastName);
     }
 
-    @GetMapping("/personInfolastName={lastName}")
-    public List<PersonInfosDTO> getPersonInfoLastName(@PathVariable String lastName) {
+    @GetMapping("/personInfolastName")
+    public List<PersonInfosDTO> getPersonInfoLastName(@RequestParam String lastName) {
         return personService.getPersonInfoFromLastName(lastName);
     }
 
