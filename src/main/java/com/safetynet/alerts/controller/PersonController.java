@@ -5,10 +5,7 @@ import com.safetynet.alerts.dto.PersonInfosDTO;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,9 +15,19 @@ public class PersonController {
     @Autowired
     private PersonService personService;
 
-    @GetMapping("/persons")
-    public List<Person> getAllPersons() {
-        return personService.getPersons();
+    @PostMapping("/person")
+    public Person addPerson(@RequestBody Person person) {
+        return personService.savePerson(person);
+    }
+
+    @PutMapping("/person")
+    public Person updatePerson(@RequestBody Person input) {
+        return personService.updatePerson(input);
+    }
+
+    @DeleteMapping("/person")
+    public void deletePerson(@RequestParam String firstName, @RequestParam String lastName) {
+        personService.deletePerson(firstName, lastName);
     }
 
     @GetMapping("/personInfolastName={lastName}")

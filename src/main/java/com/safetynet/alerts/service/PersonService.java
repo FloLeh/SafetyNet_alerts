@@ -22,23 +22,37 @@ public class PersonService {
     @Autowired
     private DataMapper dataMapper;
 
-    public List<Person> getPersons() {
-        return (List<Person>) personRepository.findAll();
+    public Person savePerson(Person input) {
+        return personRepository.save(input);
     }
 
-    public Person savePerson(Person input) {
+    public Person updatePerson(Person input) {
+        Person person = personRepository.findByFirstNameAndLastName(input.getFirstName(), input.getLastName());
+        if (person != null) {
+            if (input.getAddress() != null) {
+                person.setAddress(input.getAddress());
+            }
+            if (input.getCity() != null) {
+                person.setCity(input.getCity());
+            }
+            if (input.getZip() != null) {
+                person.setZip(input.getZip());
+            }
+            if (input.getPhone() != null) {
+                person.setPhone(input.getPhone());
+            }
+            if (input.getEmail() != null) {
+                person.setEmail(input.getEmail());
+            }
 
-        Person person = new Person();
+            return personRepository.save(person);
+        }
+        return null;
+    }
 
-        person.setFirstName(input.getFirstName());
-        person.setLastName(input.getLastName());
-        person.setAddress(input.getAddress());
-        person.setCity(input.getCity());
-        person.setZip(input.getZip());
-        person.setPhone(input.getPhone());
-        person.setEmail(input.getEmail());
-
-        return personRepository.save(person);
+    public void deletePerson(String firstName, String lastName) {
+        Person person = personRepository.findByFirstNameAndLastName(firstName, lastName);
+        personRepository.delete(person);
     }
 
     public List<PersonInfosDTO> getPersonInfoFromLastName(String lastName) {
