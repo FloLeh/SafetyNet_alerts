@@ -1,11 +1,11 @@
 package com.safetynet.alerts.repository;
 
-import com.safetynet.alerts.model.FireStation;
-import org.springframework.data.repository.CrudRepository;
+import com.safetynet.alerts.model.Firestation;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FirestationRepository {
@@ -14,7 +14,10 @@ public interface FirestationRepository {
 
     Optional<Firestation> findByAddress(String address);
 
-    FireStation findFirstByAddress(String address);
+    List<Firestation> getFirestationsByStationIn(Collection<Integer> stations);
 
-    List<FireStation> getFireStationsByStationIn(Collection<String> stations);
+    Firestation save(Firestation fireStation);
+    void delete(Optional<Firestation> fireStation);
+
+    void deleteAll(Collection<Firestation> fireStations);
 }

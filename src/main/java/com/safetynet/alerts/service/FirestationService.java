@@ -5,6 +5,7 @@ import com.safetynet.alerts.repository.FirestationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,39 +18,38 @@ public class FirestationService {
     private final FirestationRepository firestationRepository;
     private final DataMapper dataMapper;
 
-    public List<FireStation> getAllFireStations() {
-        return (List<FireStation>) fireStationRepository.findAll();
+    public List<Firestation> getAllFirestations() {
+        return firestationRepository.findAll();
     }
 
-    public FireStation saveFireStation(FireStation input) {
-        return fireStationRepository.save(input);
+    public Firestation saveFirestation(final Firestation input) {
+        return firestationRepository.save(input);
     }
 
-    public FireStation updateFireStation(FireStation input) {
-        FireStation fireStation = fireStationRepository.findFirstByAddress(input.getAddress());
-        if (fireStation != null) {
-            if (input.getStation() != null) {
-                fireStation.setStation(input.getStation());
-            }
-            return fireStationRepository.save(fireStation);
-        }
-        return null;
+    public Firestation updateFirestation(final Firestation input) {
+        Assert.notNull(input.getStation(), "station is required");
+        Assert.hasText(input.getAddress(), "address is required");
+
+        Firestation fireStation = firestationRepository.findByAddress(input.getAddress())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid address"));
+
+         fireStation.setStation(input.getStation());
+         return firestationRepository.save(fireStation);
     }
 
-    public void deleteFireStation(FireStation input) {
-        String address = input.getAddress();
-        String station = input.getStation();
-        if (address != null) {
-            FireStation fireStation = fireStationRepository.findFirstByAddress(address);
-            if (fireStation != null) {
-                fireStationRepository.delete(fireStation);
-            }
-        }
-        if (station != null) {
-            List<FireStation> fireStations = fireStationRepository.findByStation(station);
-            if (!fireStations.isEmpty()) {
-                fireStationRepository.deleteAll(fireStations);
-            }
+    public void deleteFirestation(final Optional<String> address, final Optional<Integer> stationNumber, final String deleteBy) {
+        Assert.hasText(deleteBy, "deleteBy is required");
+        if (deleteBy.equals("address")) {
+            Assert.hasText(address.get(), "address is required");
+            final Optional<Firestation> firestation = firestationRepository.findByAddress(address.get());
+            firestationRepository.delete(firestation);
+        } else if (deleteBy.equals("stationNumber")) {
+            Assert.notNull(stationNumber.get(), "station is required");
+            final List<Firestation> firestations = firestationRepository.findAll()
+                    .stream()
+                    .filter(firestation -> firestation.getStation().equals(stationNumber.get()))
+                    .toList();
+            firestationRepository.deleteAll(firestations);
         }
     }
 

@@ -12,41 +12,27 @@ import java.io.IOException;
 import java.util.Collection;
 
 @Component
-public class DataParser implements CommandLineRunner {
+public class DataParser {
 
-    @Autowired
-    private PersonService personService;
+    private final AlertJson map;
 
-    @Autowired
-    private FireStationService fireStationService;
-
-    @Autowired
-    private MedicalRecordService medicalRecordService;
-
-    @Override
-    public void run(String... args) throws Exception {
-
-        ObjectMapper mapper = new ObjectMapper();
-        AlertJson map = mapper.readValue(new File("src/main/resources/data.json"), AlertJson.class);
-
-        parsePersons(map.getPersons());
-        parseFireStations(map.getFirestations());
-        parseMedicalRecords(map.getMedicalrecords());
-
+    public DataParser (ObjectMapper mapper) throws IOException {
+        this.map = mapper.readValue(new File("src/main/resources/data.json"), AlertJson.class);
     }
 
-    private void parsePersons(List<Person> persons) {
-        persons.forEach(personService::savePerson);
+    public Collection<Person> getPersons(){
+        return map.getPersons();
     }
 
-    private void parseFireStations(List<FireStation> fireStations) {
-        fireStations.forEach(fireStationService::saveFireStation);
+    public Collection<Firestation> getFirestations(){
+        return map.getFirestations();
     }
 
-    private void parseMedicalRecords(List<MedicalRecord> medicalRecords) {
-        medicalRecords.forEach(medicalRecordService::saveMedicalRecord);
+    public Collection<MedicalRecord> getMedicalrecords(){
+        return map.getMedicalrecords();
     }
 
     //TODO(SAVE) pour update le JSON
+
 
 }
