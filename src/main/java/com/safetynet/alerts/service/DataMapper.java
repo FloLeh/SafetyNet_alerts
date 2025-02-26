@@ -1,10 +1,10 @@
 package com.safetynet.alerts.service;
 
 import com.safetynet.alerts.dto.ChildDTO;
-import com.safetynet.alerts.dto.FireStationResidentsDTO;
+import com.safetynet.alerts.dto.FirestationResidentsDTO;
 import com.safetynet.alerts.dto.PersonInfosDTO;
 import com.safetynet.alerts.dto.ResidentDTO;
-import com.safetynet.alerts.model.FireStation;
+import com.safetynet.alerts.model.Firestation;
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
 import org.springframework.stereotype.Service;
@@ -76,7 +76,7 @@ public class DataMapper {
         return childrenDTO;
     }
 
-    public Map<String, Object> personWithMedicalRecordAndFireStationNumber(List<Person> persons, List<MedicalRecord> medicalRecords, String station) {
+    public Map<String, Object> personWithMedicalRecordAndFirestationNumber(List<Person> persons, List<MedicalRecord> medicalRecords, String station) {
         List<ResidentDTO> residents = residentsByMedicalRecord(persons, medicalRecords);
         return Map.of(
                 "residents", residents,
@@ -84,9 +84,9 @@ public class DataMapper {
         );
     }
 
-    public Map<String, List<ResidentDTO>> housesByFireStations(List<Person> persons, List<MedicalRecord> medicalRecords, List<FireStation> fireStations) {
+    public Map<String, List<ResidentDTO>> housesByFirestations(List<Person> persons, List<MedicalRecord> medicalRecords, List<Firestation> fireStations) {
         Map<String, List<ResidentDTO>> residentsByAddress = new HashMap<>();
-        List<String> addresses = fireStations.stream().map(FireStation::getAddress).toList();
+        List<String> addresses = fireStations.stream().map(Firestation::getAddress).toList();
 
         for (String address : addresses) {
             List<Person> personsFiltered = persons.stream().filter(person -> person.getAddress().equals(address)).toList();
@@ -126,10 +126,10 @@ public class DataMapper {
         return residents;
     }
 
-    public List<FireStationResidentsDTO> personsToFireStationDTO(List<Person> persons) {
-        List<FireStationResidentsDTO> fireStationResidentsDTOs = new ArrayList<>();
+    public List<FirestationResidentsDTO> personsToFirestationDTO(List<Person> persons) {
+        List<FirestationResidentsDTO> fireStationResidentsDTOs = new ArrayList<>();
         for (Person person : persons) {
-            fireStationResidentsDTOs.add(new FireStationResidentsDTO(
+            fireStationResidentsDTOs.add(new FirestationResidentsDTO(
                     person.getFirstName(),
                     person.getLastName(),
                     person.getAddress(),
@@ -139,8 +139,8 @@ public class DataMapper {
         return fireStationResidentsDTOs;
     }
 
-    public Map<String, Object> residentsByFireStation(List<Person> persons, List<MedicalRecord> medicalRecords) {
-        List<FireStationResidentsDTO> residents = personsToFireStationDTO(persons);
+    public Map<String, Object> residentsByFirestation(List<Person> persons, List<MedicalRecord> medicalRecords) {
+        List<FirestationResidentsDTO> residents = personsToFirestationDTO(persons);
         int adults = medicalRecords.stream().filter(medicalRecord -> Integer.parseInt(computeAgeFromBirthdate(medicalRecord.getBirthdate())) > 18).toList().size();
         int children = medicalRecords.size() - adults;
 

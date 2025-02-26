@@ -9,7 +9,7 @@ public class AlertJson {
 
     public List<Person> persons;
 
-    public List<FireStation> firestations;
+    public List<Firestation> firestations;
 
     public List<MedicalRecord> medicalrecords;
 

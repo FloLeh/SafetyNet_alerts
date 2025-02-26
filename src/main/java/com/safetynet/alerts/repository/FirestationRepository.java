@@ -8,8 +8,11 @@ import java.util.Collection;
 import java.util.List;
 
 @Repository
-public interface FireStationRepository extends CrudRepository<FireStation, Long> {
-    List<FireStation> findByStation(String station);
+public interface FirestationRepository {
+    List<Firestation> findByStationNumber(Integer stationNumber);
+    List<Firestation> findAll();
+
+    Optional<Firestation> findByAddress(String address);
 
     FireStation findFirstByAddress(String address);
 

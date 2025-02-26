@@ -2,16 +2,14 @@ package com.safetynet.alerts.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.alerts.model.AlertJson;
-import com.safetynet.alerts.model.FireStation;
+import com.safetynet.alerts.model.Firestation;
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
+import java.io.IOException;
+import java.util.Collection;
 
 @Component
 public class DataParser implements CommandLineRunner {
@@ -48,5 +46,7 @@ public class DataParser implements CommandLineRunner {
     private void parseMedicalRecords(List<MedicalRecord> medicalRecords) {
         medicalRecords.forEach(medicalRecordService::saveMedicalRecord);
     }
+
+    //TODO(SAVE) pour update le JSON
 
 }

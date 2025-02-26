@@ -4,83 +4,89 @@ import com.safetynet.alerts.dto.ChildDTO;
 import com.safetynet.alerts.dto.PersonInfosDTO;
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
-import com.safetynet.alerts.repository.MedicalRecordRepository;
 import com.safetynet.alerts.repository.PersonRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class PersonService {
 
-    @Autowired
-    private PersonRepository personRepository;
-    @Autowired
-    private MedicalRecordRepository medicalRecordRepository;
-    @Autowired
-    private DataMapper dataMapper;
+    private final PersonRepository personRepository;
 
-    public Person savePerson(Person input) {
+    public Collection<Person> getPersons() {
+        return personRepository.findAll();
+    }
+
+    public Person savePerson(final Person input) {
         return personRepository.save(input);
     }
 
-    public Person updatePerson(Person input) {
-        Person person = personRepository.findByFirstNameAndLastName(input.getFirstName(), input.getLastName());
-        if (person != null) {
-            if (input.getAddress() != null) {
-                person.setAddress(input.getAddress());
-            }
-            if (input.getCity() != null) {
-                person.setCity(input.getCity());
-            }
-            if (input.getZip() != null) {
-                person.setZip(input.getZip());
-            }
-            if (input.getPhone() != null) {
-                person.setPhone(input.getPhone());
-            }
-            if (input.getEmail() != null) {
-                person.setEmail(input.getEmail());
-            }
+    public Person updatePerson(final Person input) {
+        Assert.hasText(input.getFirstName(), "firstName is required");
+        Assert.hasText(input.getLastName(), "lastName is required");
 
-            return personRepository.save(person);
+        Person person = personRepository.findByFirstNameAndLastName(input.getFirstName(), input.getLastName())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid firstName or lastName"));
+
+        if (input.getAddress() != null) {
+            person.setAddress(input.getAddress());
         }
-        return null;
+        if (input.getCity() != null) {
+            person.setCity(input.getCity());
+        }
+        if (input.getZip() != null) {
+            person.setZip(input.getZip());
+        }
+        if (input.getPhone() != null) {
+            person.setPhone(input.getPhone());
+        }
+        if (input.getEmail() != null) {
+            person.setEmail(input.getEmail());
+        }
+
+        return personRepository.update(person);
     }
 
-    public void deletePerson(String firstName, String lastName) {
-        Person person = personRepository.findByFirstNameAndLastName(firstName, lastName);
+    public void deletePerson(final String firstName, final String lastName) {
+        Optional<Person> person = personRepository.findByFirstNameAndLastName(firstName, lastName);
         personRepository.delete(person);
     }
 
-    public List<PersonInfosDTO> getPersonInfoFromLastName(String lastName) {
-        List<Person> persons =  personRepository.findByLastName(lastName);
-        List<MedicalRecord> medicalRecords = medicalRecordRepository.findByLastName(lastName);
-
-        return dataMapper.personsAndMedicalRecordsToPersonDTO(persons, medicalRecords);
-    }
-
-    public List<ChildDTO> getChildrenFromAddress(String address) {
-        List<Person> persons = personRepository.findByAddress(address);
-
-        List<String> lastNames = new ArrayList<>();
-        persons.forEach(person -> {
-            String lastName = person.getLastName();
-            if (!lastNames.contains(lastName)) {
-                lastNames.add(lastName);
-            }
-        });
-
-        List<MedicalRecord> medicalRecords = medicalRecordRepository.findByLastNameIn(lastNames);
-
-        return dataMapper.personsAndMedicalRecordsToChildDTO(persons, medicalRecords);
-    }
-
-    public List<String> getCommunityEmailsByCity(String city) {
-        List<Person> persons = personRepository.findByCity(city);
-
-        return persons.stream().map(Person::getEmail).distinct().toList();
-    }
+//    public List<PersonInfosDTO> getPersonInfoFromLastName(String lastName) {
+//        List<Person> persons =  personRepository.findByLastName(lastName);
+//        List<MedicalRecord> medicalRecords = medicalRecordRepository.findByLastName(lastName);
+//
+//        return dataMapper.personsAndMedicalRecordsToPersonDTO(persons, medicalRecords);
+//    }
+//
+//    public List<ChildDTO> getChildrenFromAddress(String address) {
+//        List<Person> persons = personRepository.findByAddress(address);
+//
+//        List<String> lastNames = new ArrayList<>();
+//        persons.forEach(person -> {
+//            String lastName = person.getLastName();
+//            if (!lastNames.contains(lastName)) {
+//                lastNames.add(lastName);
+//            }
+//        });
+//
+//        List<MedicalRecord> medicalRecords = medicalRecordRepository.findByLastNameIn(lastNames);
+//
+//        return dataMapper.personsAndMedicalRecordsToChildDTO(persons, medicalRecords);
+//    }
+//
+//    public List<String> getCommunityEmailsByCity(String city) {
+//        List<Person> persons = personRepository.findByCity(city);
+//
+//        return persons.stream().map(Person::getEmail).distinct().toList();
+//    }
 }
