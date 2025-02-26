@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,7 +37,6 @@ public class FirestationRepositoryFromJson implements FirestationRepository {
                 .findFirst();
     }
 
-
     public List<Firestation> getFirestationsByStationIn(Collection<Integer> stations){
         return findAll()
                 .stream()
@@ -44,16 +44,29 @@ public class FirestationRepositoryFromJson implements FirestationRepository {
                         .toList();
     }
 
-    public Firestation save(Firestation firestation){
+    public Firestation save(Firestation firestation) throws IOException {
         dataParser.getFirestations().add(firestation);
+        dataParser.saveIntoJsonFile();
+        return firestation;
+    }
+    public Firestation update(Firestation firestation) throws IOException {
+        dataParser.getFirestations()
+                .stream()
+                .filter(firestationToUpdate -> firestationToUpdate.getAddress().equals(firestation.getAddress()))
+                .forEach(firestationToUpdate -> {
+                    firestationToUpdate.setAddress(firestation.getAddress());
+                });
+        dataParser.saveIntoJsonFile();
         return firestation;
     }
 
-    public void delete(Optional<Firestation> firestation){
+    public void delete(Optional<Firestation> firestation) throws IOException {
         dataParser.getFirestations().remove(firestation.get());
+        dataParser.saveIntoJsonFile();
     }
 
-    public void deleteAll(Collection<Firestation> fireStations){
+    public void deleteAll(Collection<Firestation> fireStations) throws IOException {
         dataParser.getFirestations().removeAll(fireStations);
+        dataParser.saveIntoJsonFile();
     }
 }

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,11 +23,11 @@ public class FirestationService {
         return firestationRepository.findAll();
     }
 
-    public Firestation saveFirestation(final Firestation input) {
+    public Firestation saveFirestation(final Firestation input) throws IOException {
         return firestationRepository.save(input);
     }
 
-    public Firestation updateFirestation(final Firestation input) {
+    public Firestation updateFirestation(final Firestation input) throws IOException {
         Assert.notNull(input.getStation(), "station is required");
         Assert.hasText(input.getAddress(), "address is required");
 
@@ -34,10 +35,10 @@ public class FirestationService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid address"));
 
          fireStation.setStation(input.getStation());
-         return firestationRepository.save(fireStation);
+         return firestationRepository.update(fireStation);
     }
 
-    public void deleteFirestation(final Optional<String> address, final Optional<Integer> stationNumber, final String deleteBy) {
+    public void deleteFirestation(final Optional<String> address, final Optional<Integer> stationNumber, final String deleteBy) throws IOException {
         Assert.hasText(deleteBy, "deleteBy is required");
         if (deleteBy.equals("address")) {
             Assert.hasText(address.get(), "address is required");

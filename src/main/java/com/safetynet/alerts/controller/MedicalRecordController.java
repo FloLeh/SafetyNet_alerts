@@ -6,6 +6,8 @@ import com.safetynet.alerts.service.MedicalRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 public class MedicalRecordController {
 
@@ -18,17 +20,17 @@ public class MedicalRecordController {
     }
 
     @PostMapping("/medicalRecord")
-    public MedicalRecord addMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
+    public MedicalRecord addMedicalRecord(@RequestBody MedicalRecord medicalRecord) throws IOException {
         return medicalRecordService.saveMedicalRecord(medicalRecord);
     }
 
     @PutMapping("/medicalRecord")
-    public MedicalRecord updateMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
+    public MedicalRecord updateMedicalRecord(@RequestBody MedicalRecord medicalRecord) throws IOException {
         return medicalRecordService.updateMedicalRecord(medicalRecord);
     }
 
     @DeleteMapping("/medicalRecord")
-    public void deleteMedicalRecord(@RequestParam String firstName, @RequestParam String lastName) {
+    public void deleteMedicalRecord(@RequestParam String firstName, @RequestParam String lastName) throws IOException {
         medicalRecordService.deleteMedicalRecord(firstName, lastName);
     }
 

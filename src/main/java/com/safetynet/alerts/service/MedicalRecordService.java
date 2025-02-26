@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Slf4j
@@ -19,11 +20,11 @@ public class MedicalRecordService {
         return medicalRecordRepository.findAll();
     }
 
-    public MedicalRecord saveMedicalRecord(final MedicalRecord input) {
+    public MedicalRecord saveMedicalRecord(final MedicalRecord input) throws IOException {
         return medicalRecordRepository.save(input);
     }
 
-    public MedicalRecord updateMedicalRecord(final MedicalRecord input) {
+    public MedicalRecord updateMedicalRecord(final MedicalRecord input) throws IOException {
         MedicalRecord medicalRecord = medicalRecordRepository.findByFirstNameAndLastName(input.getFirstName(), input.getLastName())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid firstName or lastName"));
 
@@ -40,7 +41,7 @@ public class MedicalRecordService {
         return medicalRecordRepository.update(medicalRecord);
     }
 
-    public void deleteMedicalRecord(final String firstName, final String lastName) {
+    public void deleteMedicalRecord(final String firstName, final String lastName) throws IOException {
         Optional<MedicalRecord> medicalRecord = medicalRecordRepository.findByFirstNameAndLastName(firstName, lastName);
         medicalRecordRepository.delete(medicalRecord);
     }

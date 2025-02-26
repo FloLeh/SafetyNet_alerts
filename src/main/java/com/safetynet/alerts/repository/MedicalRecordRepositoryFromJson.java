@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -27,12 +28,13 @@ public class MedicalRecordRepositoryFromJson implements MedicalRecordRepository 
                 .findFirst();
     }
 
-    public MedicalRecord save(MedicalRecord medicalRecord) {
+    public MedicalRecord save(MedicalRecord medicalRecord) throws IOException {
         dataParser.getMedicalrecords().add(medicalRecord);
+        dataParser.saveIntoJsonFile();
         return medicalRecord;
     }
 
-    public MedicalRecord update(MedicalRecord medicalRecord) {
+    public MedicalRecord update(MedicalRecord medicalRecord) throws IOException {
         dataParser.getMedicalrecords()
                 .stream()
                 .filter(recordToUpdate -> recordToUpdate.getFirstName().equals(medicalRecord.getFirstName()) && recordToUpdate.getLastName().equals(medicalRecord.getLastName()))
@@ -41,11 +43,12 @@ public class MedicalRecordRepositoryFromJson implements MedicalRecordRepository 
                     recordToUpdate.setMedications(medicalRecord.getMedications());
                     recordToUpdate.setAllergies(medicalRecord.getAllergies());
                 });
+        dataParser.saveIntoJsonFile();
         return medicalRecord;
     }
 
-    public void delete(Optional<MedicalRecord> medicalRecord) {
-        boolean removed = dataParser.getMedicalrecords().remove(medicalRecord.get());
-        System.out.println(removed);
+    public void delete(Optional<MedicalRecord> medicalRecord) throws IOException {
+        dataParser.getMedicalrecords().remove(medicalRecord.get());
+        dataParser.saveIntoJsonFile();
     }
 }

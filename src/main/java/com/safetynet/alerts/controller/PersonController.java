@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -24,17 +25,17 @@ public class PersonController {
     }
 
     @PostMapping("/person")
-    public Person addPerson(@RequestBody Person person) {
+    public Person addPerson(@RequestBody Person person) throws IOException {
         return personService.savePerson(person);
     }
 
     @PutMapping("/person")
-    public Person updatePerson(@RequestBody Person input) {
+    public Person updatePerson(@RequestBody Person input) throws IOException {
         return personService.updatePerson(input);
     }
 
     @DeleteMapping("/person")
-    public void deletePerson(@RequestParam String firstName, @RequestParam String lastName) {
+    public void deletePerson(@RequestParam String firstName, @RequestParam String lastName) throws IOException {
         personService.deletePerson(firstName, lastName);
     }
 

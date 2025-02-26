@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,16 +45,13 @@ public class PersonRepositoryFromJson implements PersonRepository {
         return List.of();
     }
 
-    public void delete(Optional<Person> person) {
-        dataParser.getPersons().remove(person.get());
-    }
-
-    public Person save(Person person) {
+    public Person save(Person person) throws IOException {
         dataParser.getPersons().add(person);
+        dataParser.saveIntoJsonFile();
         return person;
     }
 
-    public Person update(Person person) {
+    public Person update(Person person) throws IOException {
         dataParser.getPersons()
                 .stream()
                 .filter(personToUpdate -> personToUpdate.getFirstName().equals(person.getFirstName()) && personToUpdate.getLastName().equals(person.getLastName()))
@@ -64,6 +62,12 @@ public class PersonRepositoryFromJson implements PersonRepository {
                         personToUpdate.setPhone(person.getPhone());
                         personToUpdate.setEmail(person.getEmail());
                 });
+        dataParser.saveIntoJsonFile();
         return person;
+    }
+
+    public void delete(Optional<Person> person) throws IOException {
+        dataParser.getPersons().remove(person.get());
+        dataParser.saveIntoJsonFile();
     }
 }

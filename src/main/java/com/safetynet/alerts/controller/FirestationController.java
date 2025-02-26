@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,17 +28,17 @@ public class FirestationController {
 //    }
 
     @PostMapping("/firestation")
-    public Firestation addFirestation(@RequestBody Firestation fireStation) {
+    public Firestation addFirestation(@RequestBody Firestation fireStation) throws IOException {
         return fireStationService.saveFirestation(fireStation);
     }
 
     @PutMapping("/firestation")
-    public Firestation updateFirestation(@RequestBody Firestation fireStation) {
+    public Firestation updateFirestation(@RequestBody Firestation fireStation) throws IOException {
         return fireStationService.updateFirestation(fireStation);
     }
 
     @DeleteMapping("/firestation")
-    public void deleteFirestationByAddress(@RequestParam Optional<String> address, @RequestParam Optional<Integer> stationNumber, @RequestParam String deleteBy) {
+    public void deleteFirestationByAddress(@RequestParam Optional<String> address, @RequestParam Optional<Integer> stationNumber, @RequestParam String deleteBy) throws IOException {
         fireStationService.deleteFirestation(address, stationNumber, deleteBy);
     }
 

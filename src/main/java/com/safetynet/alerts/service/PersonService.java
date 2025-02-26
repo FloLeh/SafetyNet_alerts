@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,11 +27,11 @@ public class PersonService {
         return personRepository.findAll();
     }
 
-    public Person savePerson(final Person input) {
+    public Person savePerson(final Person input) throws IOException {
         return personRepository.save(input);
     }
 
-    public Person updatePerson(final Person input) {
+    public Person updatePerson(final Person input) throws IOException {
         Assert.hasText(input.getFirstName(), "firstName is required");
         Assert.hasText(input.getLastName(), "lastName is required");
 
@@ -56,7 +57,7 @@ public class PersonService {
         return personRepository.update(person);
     }
 
-    public void deletePerson(final String firstName, final String lastName) {
+    public void deletePerson(final String firstName, final String lastName) throws IOException {
         Optional<Person> person = personRepository.findByFirstNameAndLastName(firstName, lastName);
         personRepository.delete(person);
     }
