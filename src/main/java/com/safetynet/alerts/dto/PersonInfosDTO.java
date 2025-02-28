@@ -1,6 +1,6 @@
 package com.safetynet.alerts.dto;
 
-import java.util.List;
+import java.util.Collection;
 
 public record PersonInfosDTO(
         String firstName,
@@ -8,6 +8,6 @@ public record PersonInfosDTO(
         String address,
         String age,
         String email,
-        List<String> medications,
-        List<String> allergies
+        Collection<String> medications,
+        Collection<String> allergies
 ) {}

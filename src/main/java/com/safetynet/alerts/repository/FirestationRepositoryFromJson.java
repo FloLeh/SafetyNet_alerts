@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -19,14 +18,14 @@ public class FirestationRepositoryFromJson implements FirestationRepository {
 
     private final DataParser dataParser;
 
-    public List<Firestation> findByStationNumber(Integer stationNumber){
+    public Collection<Firestation> findByStationNumber(Integer stationNumber){
         return findAll()
                 .stream()
                 .filter(firestation -> firestation.getStation().equals(stationNumber))
                 .toList();
     }
 
-    public List<Firestation> findAll(){
+    public Collection<Firestation> findAll(){
         return new ArrayList<>(dataParser.getFirestations());
     }
 
@@ -37,7 +36,7 @@ public class FirestationRepositoryFromJson implements FirestationRepository {
                 .findFirst();
     }
 
-    public List<Firestation> getFirestationsByStationIn(Collection<Integer> stations){
+    public Collection<Firestation> getFirestationsByStationIn(Collection<Integer> stations){
         return findAll()
                 .stream()
                 .filter(firestation -> stations.contains(firestation.getStation()))
@@ -53,9 +52,7 @@ public class FirestationRepositoryFromJson implements FirestationRepository {
         dataParser.getFirestations()
                 .stream()
                 .filter(firestationToUpdate -> firestationToUpdate.getAddress().equals(firestation.getAddress()))
-                .forEach(firestationToUpdate -> {
-                    firestationToUpdate.setAddress(firestation.getAddress());
-                });
+                .forEach(firestationToUpdate -> firestationToUpdate.setAddress(firestation.getAddress()));
         dataParser.saveIntoJsonFile();
         return firestation;
     }

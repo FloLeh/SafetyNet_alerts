@@ -13,7 +13,6 @@ import org.springframework.util.Assert;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -22,6 +21,9 @@ import java.util.Optional;
 public class PersonService {
 
     private final PersonRepository personRepository;
+    private final DataMapper dataMapper;
+    private final MedicalRecordService medicalRecordService;
+    private final DataParser dataParser;
 
     public Collection<Person> getPersons() {
         return personRepository.findAll();
@@ -62,32 +64,46 @@ public class PersonService {
         personRepository.delete(person);
     }
 
-//    public List<PersonInfosDTO> getPersonInfoFromLastName(String lastName) {
-//        List<Person> persons =  personRepository.findByLastName(lastName);
-//        List<MedicalRecord> medicalRecords = medicalRecordRepository.findByLastName(lastName);
-//
-//        return dataMapper.personsAndMedicalRecordsToPersonDTO(persons, medicalRecords);
-//    }
-//
-//    public List<ChildDTO> getChildrenFromAddress(String address) {
-//        List<Person> persons = personRepository.findByAddress(address);
-//
-//        List<String> lastNames = new ArrayList<>();
-//        persons.forEach(person -> {
-//            String lastName = person.getLastName();
-//            if (!lastNames.contains(lastName)) {
-//                lastNames.add(lastName);
-//            }
-//        });
-//
-//        List<MedicalRecord> medicalRecords = medicalRecordRepository.findByLastNameIn(lastNames);
-//
-//        return dataMapper.personsAndMedicalRecordsToChildDTO(persons, medicalRecords);
-//    }
-//
-//    public List<String> getCommunityEmailsByCity(String city) {
-//        List<Person> persons = personRepository.findByCity(city);
-//
-//        return persons.stream().map(Person::getEmail).distinct().toList();
-//    }
+    public Collection<PersonInfosDTO> getPersonInfoFromLastName(String lastName) {
+        Collection<Person> persons =  personRepository.findByLastName(lastName);
+        Collection<MedicalRecord> medicalRecords = medicalRecordService.getMedicalRecordByLastName(lastName);
+
+        return dataMapper.personsAndMedicalRecordsToPersonDTO(persons, medicalRecords);
+    }
+
+    public Collection<ChildDTO> getChildrenFromAddress(String address) {
+        Collection<Person> persons = personRepository.findByAddress(address);
+
+        Collection<String> lastNames = new ArrayList<>();
+        persons.forEach(person -> {
+            String lastName = person.getLastName();
+            if (!lastNames.contains(lastName)) {
+                lastNames.add(lastName);
+            }
+        });
+
+        Collection<MedicalRecord> medicalRecords = medicalRecordService.getByLastNameIn(lastNames);
+
+        return dataMapper.personsAndMedicalRecordsToChildDTO(persons, medicalRecords);
+    }
+
+    public Collection<String> getCommunityEmailsByCity(String city) {
+        Collection<Person> persons = personRepository.findByCity(city);
+
+        return persons.stream().map(Person::getEmail).distinct().toList();
+    }
+
+    public Collection<Person> getByAddress(String address) {
+        return dataParser.getPersons()
+                .stream()
+                .filter(person -> person.getAddress().equals(address))
+                .toList();
+    }
+
+    public Collection<Person> getByAddressIn(Collection<String> addresses) {
+        return dataParser.getPersons()
+                .stream()
+                .filter(person -> addresses.contains(person.getAddress()))
+                .toList();
+    }
 }

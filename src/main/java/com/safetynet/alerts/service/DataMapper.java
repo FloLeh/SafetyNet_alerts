@@ -14,7 +14,7 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 @Service
@@ -32,9 +32,9 @@ public class DataMapper {
         );
     }
 
-    public List<PersonInfosDTO> personsAndMedicalRecordsToPersonDTO(Iterable<Person> persons, Iterable<MedicalRecord> medicalRecords) {
+    public Collection<PersonInfosDTO> personsAndMedicalRecordsToPersonDTO(Iterable<Person> persons, Iterable<MedicalRecord> medicalRecords) {
 
-        List<PersonInfosDTO> personsInfosDTO = new ArrayList<>();
+        Collection<PersonInfosDTO> personsInfosDTO = new ArrayList<>();
 
         for (Person person : persons) {
             for (MedicalRecord medicalRecord : medicalRecords) {
@@ -49,16 +49,16 @@ public class DataMapper {
         return personsInfosDTO;
     }
 
-    public List<ChildDTO> personsAndMedicalRecordsToChildDTO(List<Person> persons, List<MedicalRecord> medicalRecords) {
-        List<PersonInfosDTO> personInfosDTOS = personsAndMedicalRecordsToPersonDTO(persons, medicalRecords);
+    public Collection<ChildDTO> personsAndMedicalRecordsToChildDTO(Collection<Person> persons, Collection<MedicalRecord> medicalRecords) {
+        Collection<PersonInfosDTO> personInfosDTOS = personsAndMedicalRecordsToPersonDTO(persons, medicalRecords);
 
-        List<PersonInfosDTO> children = personInfosDTOS.stream()
+        Collection<PersonInfosDTO> children = personInfosDTOS.stream()
                 .filter(person -> Integer.parseInt(person.age()) <= 18)
                 .toList();
 
-        List<ChildDTO> childrenDTO = new ArrayList<>();
+        Collection<ChildDTO> childrenDTO = new ArrayList<>();
         for (PersonInfosDTO child : children) {
-            List<Person> householdMembers = persons.stream()
+            Collection<Person> householdMembers = persons.stream()
                     .filter(person ->
                         person.getAddress().equals(child.address())
                                 && !(person.getFirstName().equals(child.firstName())
@@ -76,21 +76,21 @@ public class DataMapper {
         return childrenDTO;
     }
 
-    public Map<String, Object> personWithMedicalRecordAndFirestationNumber(List<Person> persons, List<MedicalRecord> medicalRecords, String station) {
-        List<ResidentDTO> residents = residentsByMedicalRecord(persons, medicalRecords);
+    public Map<String, Object> personWithMedicalRecordAndFirestationNumber(Collection<Person> persons, Collection<MedicalRecord> medicalRecords, int station) {
+        Collection<ResidentDTO> residents = residentsByMedicalRecord(persons, medicalRecords);
         return Map.of(
                 "residents", residents,
                 "station", station
         );
     }
 
-    public Map<String, List<ResidentDTO>> housesByFirestations(List<Person> persons, List<MedicalRecord> medicalRecords, List<Firestation> fireStations) {
-        Map<String, List<ResidentDTO>> residentsByAddress = new HashMap<>();
-        List<String> addresses = fireStations.stream().map(Firestation::getAddress).toList();
+    public Map<String, Collection<ResidentDTO>> housesByFirestations(Collection<Person> persons, Collection<MedicalRecord> medicalRecords, Collection<Firestation> fireStations) {
+        Map<String, Collection<ResidentDTO>> residentsByAddress = new HashMap<>();
+        Collection<String> addresses = fireStations.stream().map(Firestation::getAddress).toList();
 
         for (String address : addresses) {
-            List<Person> personsFiltered = persons.stream().filter(person -> person.getAddress().equals(address)).toList();
-            List<ResidentDTO> residents = residentsByMedicalRecord(personsFiltered, medicalRecords);
+            Collection<Person> personsFiltered = persons.stream().filter(person -> person.getAddress().equals(address)).toList();
+            Collection<ResidentDTO> residents = residentsByMedicalRecord(personsFiltered, medicalRecords);
 
             residentsByAddress.put(address, residents);
         }
@@ -98,8 +98,8 @@ public class DataMapper {
         return residentsByAddress;
     }
 
-    public List<ResidentDTO> residentsByMedicalRecord(List<Person> persons, List<MedicalRecord> medicalRecords) {
-        List<ResidentDTO> residents = new ArrayList<>();
+    public Collection<ResidentDTO> residentsByMedicalRecord(Collection<Person> persons, Collection<MedicalRecord> medicalRecords) {
+        Collection<ResidentDTO> residents = new ArrayList<>();
         for (Person person : persons) {
             String firstName = person.getFirstName();
             String lastName = person.getLastName();
@@ -110,8 +110,8 @@ public class DataMapper {
                         person.getFirstName().equals(medicalRecord.getFirstName())
                 ) {
                     String age = computeAgeFromBirthdate(medicalRecord.getBirthdate());
-                    List<String> medications = medicalRecord.getMedications();
-                    List<String> allergies = medicalRecord.getAllergies();
+                    Collection<String> medications = medicalRecord.getMedications();
+                    Collection<String> allergies = medicalRecord.getAllergies();
                     residents.add(new ResidentDTO(
                             firstName,
                             lastName,
@@ -126,8 +126,8 @@ public class DataMapper {
         return residents;
     }
 
-    public List<FirestationResidentsDTO> personsToFirestationDTO(List<Person> persons) {
-        List<FirestationResidentsDTO> fireStationResidentsDTOs = new ArrayList<>();
+    public Collection<FirestationResidentsDTO> personsToFirestationDTO(Collection<Person> persons) {
+        Collection<FirestationResidentsDTO> fireStationResidentsDTOs = new ArrayList<>();
         for (Person person : persons) {
             fireStationResidentsDTOs.add(new FirestationResidentsDTO(
                     person.getFirstName(),
@@ -139,8 +139,8 @@ public class DataMapper {
         return fireStationResidentsDTOs;
     }
 
-    public Map<String, Object> residentsByFirestation(List<Person> persons, List<MedicalRecord> medicalRecords) {
-        List<FirestationResidentsDTO> residents = personsToFirestationDTO(persons);
+    public Map<String, Object> residentsByFirestation(Collection<Person> persons, Collection<MedicalRecord> medicalRecords) {
+        Collection<FirestationResidentsDTO> residents = personsToFirestationDTO(persons);
         int adults = medicalRecords.stream().filter(medicalRecord -> Integer.parseInt(computeAgeFromBirthdate(medicalRecord.getBirthdate())) > 18).toList().size();
         int children = medicalRecords.size() - adults;
 

@@ -2,7 +2,7 @@ package com.safetynet.alerts.model;
 
 import lombok.Data;
 
-import java.util.List;
+import java.util.Collection;
 
 @Data
 public class MedicalRecord {
@@ -13,8 +13,8 @@ public class MedicalRecord {
 
     private String birthdate;
 
-    private List<String> medications;
+    private Collection<String> medications;
 
-    private List<String> allergies;
+    private Collection<String> allergies;
 
 }

@@ -28,6 +28,27 @@ public class MedicalRecordRepositoryFromJson implements MedicalRecordRepository 
                 .findFirst();
     }
 
+    public Collection<MedicalRecord> findByLastName(String lastName) {
+        return dataParser.getMedicalrecords()
+                .stream()
+                .filter(medicalRecord -> medicalRecord.getLastName().equals(lastName))
+                .toList();
+    }
+
+    public Collection<MedicalRecord> findByLastNameIn(Collection<String> lastNames) {
+        return dataParser.getMedicalrecords()
+                .stream()
+                .filter(medicalRecord -> lastNames.contains(medicalRecord.getLastName()))
+                .toList();
+    }
+
+    public Collection<MedicalRecord> findByLastNameInAndFirstNameIn(Collection<String> lastNames, Collection<String> firstNames) {
+        return dataParser.getMedicalrecords()
+                .stream()
+                .filter(medicalRecord -> lastNames.contains(medicalRecord.getLastName()) && firstNames.contains(medicalRecord.getFirstName()))
+                .toList();
+    }
+
     public MedicalRecord save(MedicalRecord medicalRecord) throws IOException {
         dataParser.getMedicalrecords().add(medicalRecord);
         dataParser.saveIntoJsonFile();
@@ -51,4 +72,5 @@ public class MedicalRecordRepositoryFromJson implements MedicalRecordRepository 
         dataParser.getMedicalrecords().remove(medicalRecord.get());
         dataParser.saveIntoJsonFile();
     }
+
 }

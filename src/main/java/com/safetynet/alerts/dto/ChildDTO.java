@@ -3,12 +3,12 @@ package com.safetynet.alerts.dto;
 
 import com.safetynet.alerts.model.Person;
 
-import java.util.List;
+import java.util.Collection;
 
 public record ChildDTO(
         String firstName,
         String lastName,
         String age,
-        List<Person> householdMembers
+        Collection<Person> householdMembers
 ) {
 }

@@ -5,24 +5,18 @@ import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface FirestationRepository {
-    List<Firestation> findByStationNumber(Integer stationNumber);
-
-    List<Firestation> findAll();
-
-    Optional<Firestation> findByAddress(String address);
-
-    List<Firestation> getFirestationsByStationIn(Collection<Integer> stations);
+    Collection<Firestation> findAll();
 
     Firestation save(Firestation fireStation) throws IOException;
-
     Firestation update(Firestation fireStation) throws IOException;
-
     void delete(Optional<Firestation> fireStation) throws IOException;
-
     void deleteAll(Collection<Firestation> fireStations) throws IOException;
+
+    Optional<Firestation> findByAddress(String address);
+    Collection<Firestation> findByStationNumber(Integer stationNumber);
+    Collection<Firestation> getFirestationsByStationIn(Collection<Integer> stations);
 }

@@ -1,6 +1,9 @@
 package com.safetynet.alerts.service;
 
+import com.safetynet.alerts.dto.ResidentDTO;
 import com.safetynet.alerts.model.Firestation;
+import com.safetynet.alerts.model.MedicalRecord;
+import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.FirestationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,8 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -18,8 +20,10 @@ public class FirestationService {
 
     private final FirestationRepository firestationRepository;
     private final DataMapper dataMapper;
+    private final PersonService personService;
+    private final MedicalRecordService medicalRecordService;
 
-    public List<Firestation> getAllFirestations() {
+    public Collection<Firestation> getAllFirestations() {
         return firestationRepository.findAll();
     }
 
@@ -46,7 +50,7 @@ public class FirestationService {
             firestationRepository.delete(firestation);
         } else if (deleteBy.equals("stationNumber")) {
             Assert.notNull(stationNumber.get(), "station is required");
-            final List<Firestation> firestations = firestationRepository.findAll()
+            final Collection<Firestation> firestations = firestationRepository.findAll()
                     .stream()
                     .filter(firestation -> firestation.getStation().equals(stationNumber.get()))
                     .toList();
@@ -54,43 +58,43 @@ public class FirestationService {
         }
     }
 
-//    public List<String> getPhoneNumbersByFirestationNumber(int station) {
-//        List<Firestation> fireStations = firestationRepository.findByStationNumber(station);
-//
-//        List<Person> persons = personRepository.findByAddressIn(fireStations.stream().map(Firestation::getAddress).toList());
-//
-//        List<String> phoneNumbers = new ArrayList<>();
-//        for (Person person : persons) {
-//            phoneNumbers.add(person.getPhone());
-//        }
-//        return phoneNumbers.stream().distinct().toList();
-//    }
-//
-//    public Map<String, Object> getFirestationResidents(String address) {
-//        Firestation fireStation = firestationRepository.findByAddress(address)
-//                .orElseThrow();
-//
-//        List<Person> persons = personRepository.findByAddress(address);
-//        List<MedicalRecord> medicalRecords = medicalRecordRepository.findByLastNameIn(persons.stream().map(Person::getLastName).toList());
-//
-//        return dataMapper.personWithMedicalRecordAndFirestationNumber(persons, medicalRecords, fireStation.getStation());
-//    }
-//
-//    public Map<String, List<ResidentDTO>> getHousesByFirestations(List<Integer > stations) {
-//        List<Firestation> fireStations = firestationRepository.getFirestationsByStationIn(stations);
-//        List<Person> persons = personRepository.findByAddressIn(fireStations.stream().map(Firestation::getAddress).toList());
-//        List<MedicalRecord> medicalRecords = medicalRecordRepository.findByLastNameIn(persons.stream().map(Person::getLastName).toList());
-//        return dataMapper.housesByFirestations(persons, medicalRecords, fireStations);
-//    }
-//
-//    public Map<String, Object> getResidentsByFirestation(Integer stationNumber) {
-//        List<Firestation> fireStations = firestationRepository.findBystationNumber(stationNumber);
-//        List<Person> persons = personRepository.findByAddressIn(fireStations.stream().map(Firestation::getAddress).toList());
-//        List<MedicalRecord> medicalRecords = medicalRecordRepository.findByLastNameInAndFirstNameIn(
-//                persons.stream().map(Person::getLastName).toList(),
-//                persons.stream().map(Person::getFirstName).toList());
-//
-//        return dataMapper.residentsByFirestation(persons, medicalRecords);
-//    }
+    public Collection<String> getPhoneNumbersByFirestationNumber(int station) {
+        Collection<Firestation> fireStations = firestationRepository.findByStationNumber(station);
+
+        Collection<Person> persons = personService.getByAddressIn(fireStations.stream().map(Firestation::getAddress).toList());
+
+        Collection<String> phoneNumbers = new ArrayList<>();
+        for (Person person : persons) {
+            phoneNumbers.add(person.getPhone());
+        }
+        return phoneNumbers.stream().distinct().toList();
+    }
+
+    public Map<String, Object> getFirestationResidents(String address) {
+        Firestation fireStation = firestationRepository.findByAddress(address)
+                .orElseThrow();
+
+        Collection<Person> persons = personService.getByAddress(address);
+        Collection<MedicalRecord> medicalRecords = medicalRecordService.getByLastNameIn(persons.stream().map(Person::getLastName).toList());
+
+        return dataMapper.personWithMedicalRecordAndFirestationNumber(persons, medicalRecords, fireStation.getStation());
+    }
+
+    public Map<String, Collection<ResidentDTO>> getHousesByFirestations(Collection<Integer > stations) {
+        Collection<Firestation> fireStations = firestationRepository.getFirestationsByStationIn(stations);
+        Collection<Person> persons = personService.getByAddressIn(fireStations.stream().map(Firestation::getAddress).toList());
+        Collection<MedicalRecord> medicalRecords = medicalRecordService.getByLastNameIn(persons.stream().map(Person::getLastName).toList());
+        return dataMapper.housesByFirestations(persons, medicalRecords, fireStations);
+    }
+
+    public Map<String, Object> getResidentsByFirestation(Integer stationNumber) {
+        Collection<Firestation> fireStations = firestationRepository.findByStationNumber(stationNumber);
+        Collection<Person> persons = personService.getByAddressIn(fireStations.stream().map(Firestation::getAddress).toList());
+        Collection<MedicalRecord> medicalRecords = medicalRecordService.getByLastNameInAndFirstNameIn(
+                persons.stream().map(Person::getLastName).toList(),
+                persons.stream().map(Person::getFirstName).toList());
+
+        return dataMapper.residentsByFirestation(persons, medicalRecords);
+    }
 
 }

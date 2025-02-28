@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,19 +38,19 @@ public class PersonController {
         personService.deletePerson(firstName, lastName);
     }
 
-//    @GetMapping("/personInfolastName")
-//    public List<PersonInfosDTO> getPersonInfoLastName(@RequestParam String lastName) {
-//        return personService.getPersonInfoFromLastName(lastName);
-//    }
-//
-//    @GetMapping("/childAlert")
-//    public List<ChildDTO> getChildAlert(@RequestParam String address) {
-//        return personService.getChildrenFromAddress(address);
-//    }
-//
-//    @GetMapping("/communityEmail")
-//    public List<String> getCommunityEmail(@RequestParam String city) {
-//        return personService.getCommunityEmailsByCity(city);
-//    }
+    @GetMapping("/personInfo")
+    public Collection<PersonInfosDTO> getPersonInfoLastName(@RequestParam String lastName) {
+        return personService.getPersonInfoFromLastName(lastName);
+    }
+
+    @GetMapping("/childAlert")
+    public Collection<ChildDTO> getChildAlert(@RequestParam String address) {
+        return personService.getChildrenFromAddress(address);
+    }
+
+    @GetMapping("/communityEmail")
+    public Collection<String> getCommunityEmail(@RequestParam String city) {
+        return personService.getCommunityEmailsByCity(city);
+    }
 
 }

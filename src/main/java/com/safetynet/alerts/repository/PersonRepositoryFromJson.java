@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 
 @Slf4j
@@ -18,7 +18,7 @@ public class PersonRepositoryFromJson implements PersonRepository {
 
     private final DataParser dataParser;
 
-    public List<Person> findAll(){
+    public Collection<Person> findAll(){
         return new ArrayList<>(dataParser.getPersons());
     }
 
@@ -29,20 +29,25 @@ public class PersonRepositoryFromJson implements PersonRepository {
                 .findFirst();
     }
 
-    public List<Person> findByLastName(String lastName) {
-        return List.of();
+    public Collection<Person> findByLastName(String lastName) {
+        return dataParser.getPersons()
+                .stream()
+                .filter(person -> person.getLastName().equals(lastName))
+                .toList();
     }
 
-    public List<Person> findByAddress(String address) {
-        return List.of();
+    public Collection<Person> findByAddress(String address) {
+        return dataParser.getPersons()
+                .stream()
+                .filter(person -> person.getAddress().equals(address))
+                .toList();
     }
 
-    public List<Person> findByAddressIn(List<String> addresses) {
-        return List.of();
-    }
-
-    public List<Person> findByCity(String city) {
-        return List.of();
+    public Collection<Person> findByCity(String city) {
+        return dataParser.getPersons()
+                .stream()
+                .filter(person -> person.getCity().equals(city))
+                .toList();
     }
 
     public Person save(Person person) throws IOException {
@@ -70,4 +75,6 @@ public class PersonRepositoryFromJson implements PersonRepository {
         dataParser.getPersons().remove(person.get());
         dataParser.saveIntoJsonFile();
     }
+
+
 }

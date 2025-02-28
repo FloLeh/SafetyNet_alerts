@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Optional;
 
 @Slf4j
@@ -44,5 +45,17 @@ public class MedicalRecordService {
     public void deleteMedicalRecord(final String firstName, final String lastName) throws IOException {
         Optional<MedicalRecord> medicalRecord = medicalRecordRepository.findByFirstNameAndLastName(firstName, lastName);
         medicalRecordRepository.delete(medicalRecord);
+    }
+
+    public Collection<MedicalRecord> getMedicalRecordByLastName(final String lastName) {
+        return medicalRecordRepository.findByLastName(lastName);
+    }
+
+    public Collection<MedicalRecord> getByLastNameIn(Collection<String> lastNames) {
+        return medicalRecordRepository.findByLastNameIn(lastNames);
+    }
+
+    public Collection<MedicalRecord> getByLastNameInAndFirstNameIn(Collection<String> lastNames, Collection<String> firstNames) {
+        return medicalRecordRepository.findByLastNameInAndFirstNameIn(lastNames, firstNames);
     }
 }
