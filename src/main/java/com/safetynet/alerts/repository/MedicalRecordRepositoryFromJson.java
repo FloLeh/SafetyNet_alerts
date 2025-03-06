@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,11 +20,12 @@ public class MedicalRecordRepositoryFromJson implements MedicalRecordRepository 
         return dataParser.getMedicalrecords();
     }
 
-    public Optional<MedicalRecord> findByFirstNameAndLastName(String firstName, String lastName) {
+    public MedicalRecord findByFirstNameAndLastName(String firstName, String lastName) {
         return findAll()
                 .stream()
                 .filter(medicalRecord -> medicalRecord.getFirstName().equals(firstName) && medicalRecord.getLastName().equals(lastName))
-                .findFirst();
+                .findFirst()
+                .orElseThrow();
     }
 
     public List<MedicalRecord> findByLastName(String lastName) {
@@ -68,8 +68,8 @@ public class MedicalRecordRepositoryFromJson implements MedicalRecordRepository 
         return medicalRecord;
     }
 
-    public void delete(Optional<MedicalRecord> medicalRecord) throws IOException {
-        dataParser.getMedicalrecords().remove(medicalRecord.get());
+    public void delete(MedicalRecord medicalRecord) throws IOException {
+        dataParser.getMedicalrecords().remove(medicalRecord);
         dataParser.saveIntoJsonFile();
     }
 

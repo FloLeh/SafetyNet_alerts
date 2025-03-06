@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -16,7 +17,7 @@ public class MedicalRecordController {
     final MedicalRecordServiceImpl medicalRecordService;
 
     @GetMapping("/medicalRecords")
-    public Iterable<MedicalRecord> getMedicalRecords() {
+    public List<MedicalRecord> getMedicalRecords() {
         return medicalRecordService.getMedicalRecords();
     }
 

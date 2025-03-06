@@ -59,7 +59,7 @@ public class FirestationController {
     }
 
     @GetMapping("/flood/stations")
-    public Map<String, List<FirestationResidentWithMedicalRecordDTO>> getFirestationResidents(@RequestParam List<Integer> stations) {
+    public Map<String, List<FirestationResidentWithMedicalRecordDTO>> getHousesByFirestations(@RequestParam List<Integer> stations) {
         return fireStationService.getHousesByFirestations(stations);
     }
 

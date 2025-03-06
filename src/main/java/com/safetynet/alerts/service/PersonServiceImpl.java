@@ -13,7 +13,6 @@ import org.springframework.util.Assert;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -36,8 +35,7 @@ public class PersonServiceImpl implements PersonService {
         Assert.hasText(input.getFirstName(), "firstName is required");
         Assert.hasText(input.getLastName(), "lastName is required");
 
-        Person person = personRepository.findByFirstNameAndLastName(input.getFirstName(), input.getLastName())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid firstName or lastName"));
+        Person person = personRepository.findByFirstNameAndLastName(input.getFirstName(), input.getLastName());
 
         if (input.getAddress() != null) {
             person.setAddress(input.getAddress());
@@ -59,7 +57,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     public void deletePerson(final String firstName, final String lastName) throws IOException {
-        Optional<Person> person = personRepository.findByFirstNameAndLastName(firstName, lastName);
+        Person person = personRepository.findByFirstNameAndLastName(firstName, lastName);
         personRepository.delete(person);
     }
 

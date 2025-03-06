@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,11 +21,12 @@ public class PersonRepositoryFromJson implements PersonRepository {
         return new ArrayList<>(dataParser.getPersons());
     }
 
-    public Optional<Person> findByFirstNameAndLastName(String firstName, String lastName) {
+    public Person findByFirstNameAndLastName(String firstName, String lastName) {
         return findAll()
                 .stream()
                 .filter(person -> person.getFirstName().equals(firstName) && person.getLastName().equals(lastName))
-                .findFirst();
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Invalid firstName or lastName"));
     }
 
     public List<Person> findByLastName(String lastName) {
@@ -71,8 +71,8 @@ public class PersonRepositoryFromJson implements PersonRepository {
         return person;
     }
 
-    public void delete(Optional<Person> person) throws IOException {
-        dataParser.getPersons().remove(person.get());
+    public void delete(Person person) throws IOException {
+        dataParser.getPersons().remove(person);
         dataParser.saveIntoJsonFile();
     }
 

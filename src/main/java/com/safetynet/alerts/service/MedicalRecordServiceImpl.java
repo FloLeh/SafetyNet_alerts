@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,7 +16,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
 
     private final MedicalRecordRepository medicalRecordRepository;
 
-    public Iterable<MedicalRecord> getMedicalRecords() {
+    public List<MedicalRecord> getMedicalRecords() {
         return medicalRecordRepository.findAll();
     }
 
@@ -26,8 +25,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
     }
 
     public MedicalRecord updateMedicalRecord(final MedicalRecord input) throws IOException {
-        MedicalRecord medicalRecord = medicalRecordRepository.findByFirstNameAndLastName(input.getFirstName(), input.getLastName())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid firstName or lastName"));
+        MedicalRecord medicalRecord = medicalRecordRepository.findByFirstNameAndLastName(input.getFirstName(), input.getLastName());
 
         if (input.getBirthdate() != null) {
             medicalRecord.setBirthdate(input.getBirthdate());
@@ -43,7 +41,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
     }
 
     public void deleteMedicalRecord(final String firstName, final String lastName) throws IOException {
-        Optional<MedicalRecord> medicalRecord = medicalRecordRepository.findByFirstNameAndLastName(firstName, lastName);
+        MedicalRecord medicalRecord = medicalRecordRepository.findByFirstNameAndLastName(firstName, lastName);
         medicalRecordRepository.delete(medicalRecord);
     }
 
