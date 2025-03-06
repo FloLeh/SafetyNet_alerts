@@ -2,15 +2,15 @@ package com.safetynet.alerts.model;
 
 import lombok.Data;
 
-import java.util.Collection;
+import java.util.List;
 
 @Data
 public class AlertJson {
 
-    public Collection<Person> persons;
+    public List<Person> persons;
 
-    public Collection<Firestation> firestations;
+    public List<Firestation> firestations;
 
-    public Collection<MedicalRecord> medicalrecords;
+    public List<MedicalRecord> medicalrecords;
 
 }

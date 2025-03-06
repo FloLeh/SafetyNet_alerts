@@ -5,18 +5,18 @@ import com.safetynet.alerts.model.AlertJson;
 import com.safetynet.alerts.model.Firestation;
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
-import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.List;
 
 @Component
 public class DataParser {
 
     private final AlertJson json;
-    private final File file = new File("src/main/resources/data.json");
+    private final File file = new ClassPathResource("data.json").getFile();
     private final ObjectMapper mapper;
 
     public DataParser (ObjectMapper mapper) throws IOException {
@@ -24,15 +24,15 @@ public class DataParser {
         this.json = mapper.readValue(file, AlertJson.class);
     }
 
-    public Collection<Person> getPersons(){
+    public List<Person> getPersons(){
         return json.getPersons();
     }
 
-    public Collection<Firestation> getFirestations(){
+    public List<Firestation> getFirestations(){
         return json.getFirestations();
     }
 
-    public Collection<MedicalRecord> getMedicalrecords(){
+    public List<MedicalRecord> getMedicalrecords(){
         return json.getMedicalrecords();
     }
 

@@ -1,31 +1,32 @@
 package com.safetynet.alerts.controller;
 
-import com.safetynet.alerts.dto.ResidentDTO;
+import com.safetynet.alerts.dto.FirestationResidentsByAddressDTO;
+import com.safetynet.alerts.dto.FirestationResidentsCountDTO;
+import com.safetynet.alerts.dto.FirestationResidentWithMedicalRecordDTO;
 import com.safetynet.alerts.model.Firestation;
-import com.safetynet.alerts.service.FirestationService;
+import com.safetynet.alerts.service.FirestationServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 public class FirestationController {
 
-    private final FirestationService fireStationService;
+    private final FirestationServiceImpl fireStationService;
 
     @GetMapping("/firestations")
-    public Collection<Firestation> getAllFirestations() {
+    public List<Firestation> getAllFirestations() {
         return fireStationService.getAllFirestations();
     }
 
     @GetMapping("/firestation")
-    public Map<String, Object> getResidentsByStation(@RequestParam int stationNumber) {
+    public FirestationResidentsCountDTO getResidentsByStation(@RequestParam int stationNumber) {
         return fireStationService.getResidentsByFirestation(stationNumber);
     }
 
@@ -40,22 +41,25 @@ public class FirestationController {
     }
 
     @DeleteMapping("/firestation")
-    public void deleteFirestationByAddress(@RequestParam Optional<String> address, @RequestParam Optional<Integer> stationNumber, @RequestParam String deleteBy) throws IOException {
-        fireStationService.deleteFirestation(address, stationNumber, deleteBy);
+    public void deleteFirestationByAddress(@RequestParam(required = false) String address, @RequestParam(required = false) Integer stationNumber) throws IOException {
+        if(address == null && stationNumber == null) {
+            throw new IllegalArgumentException("Address and stationNumber can't be null");
+        }
+        fireStationService.deleteFirestation(address, stationNumber);
     }
 
     @GetMapping("/phoneAlert")
-    public Collection<String> getPhoneAlert(@RequestParam int firestation) {
+    public List<String> getPhoneAlert(@RequestParam int firestation) {
         return fireStationService.getPhoneNumbersByFirestationNumber(firestation);
     }
 
     @GetMapping("/fire")
-    public Map<String, Object> getFirestationResidents(@RequestParam String address) {
+    public FirestationResidentsByAddressDTO getFirestationResidents(@RequestParam String address) {
         return fireStationService.getFirestationResidents(address);
     }
 
     @GetMapping("/flood/stations")
-    public Map<String, Collection<ResidentDTO>> getFirestationResidents(@RequestParam Collection<Integer> stations) {
+    public Map<String, List<FirestationResidentWithMedicalRecordDTO>> getFirestationResidents(@RequestParam List<Integer> stations) {
         return fireStationService.getHousesByFirestations(stations);
     }
 

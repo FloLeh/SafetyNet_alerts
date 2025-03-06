@@ -1,8 +1,11 @@
 package com.safetynet.alerts.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import java.util.Collection;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
 
 @Data
 public class MedicalRecord {
@@ -11,10 +14,23 @@ public class MedicalRecord {
 
     private String lastName;
 
-    private String birthdate;
+    @JsonFormat(pattern = "MM/dd/yyyy")
+    private LocalDate birthdate;
 
-    private Collection<String> medications;
+    private List<String> medications;
 
-    private Collection<String> allergies;
+    private List<String> allergies;
+
+    public Integer getAge() {
+        return Period.between(birthdate, LocalDate.now()).getYears();
+    }
+
+    public boolean isMinor() {
+        return !isMajor();
+    }
+
+    public boolean isMajor() {
+        return getAge() > 18;
+    }
 
 }

@@ -4,19 +4,19 @@ import com.safetynet.alerts.model.MedicalRecord;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface MedicalRecordRepository {
-    Collection<MedicalRecord> findAll();
+    List<MedicalRecord> findAll();
 
     MedicalRecord save(MedicalRecord medicalRecord) throws IOException;
     MedicalRecord update(MedicalRecord medicalRecord) throws IOException;
     void delete(Optional<MedicalRecord> medicalRecord) throws IOException;
 
-    Collection<MedicalRecord> findByLastName(String lastName);
-    Collection<MedicalRecord> findByLastNameIn(Collection<String> lastNames);
+    List<MedicalRecord> findByLastName(String lastName);
+    List<MedicalRecord> findByLastNameIn(List<String> lastNames);
     Optional<MedicalRecord> findByFirstNameAndLastName(String firstName, String lastName);
-    Collection<MedicalRecord> findByLastNameInAndFirstNameIn(Collection<String> lastNames, Collection<String> firstNames);
+    List<MedicalRecord> findByLastNameInAndFirstNameIn(List<String> lastNames, List<String> firstNames);
 }

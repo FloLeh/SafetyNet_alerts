@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -18,7 +18,7 @@ public class PersonRepositoryFromJson implements PersonRepository {
 
     private final DataParser dataParser;
 
-    public Collection<Person> findAll(){
+    public List<Person> findAll(){
         return new ArrayList<>(dataParser.getPersons());
     }
 
@@ -29,21 +29,21 @@ public class PersonRepositoryFromJson implements PersonRepository {
                 .findFirst();
     }
 
-    public Collection<Person> findByLastName(String lastName) {
+    public List<Person> findByLastName(String lastName) {
         return dataParser.getPersons()
                 .stream()
                 .filter(person -> person.getLastName().equals(lastName))
                 .toList();
     }
 
-    public Collection<Person> findByAddress(String address) {
+    public List<Person> findByAddress(String address) {
         return dataParser.getPersons()
                 .stream()
                 .filter(person -> person.getAddress().equals(address))
                 .toList();
     }
 
-    public Collection<Person> findByCity(String city) {
+    public List<Person> findByCity(String city) {
         return dataParser.getPersons()
                 .stream()
                 .filter(person -> person.getCity().equals(city))

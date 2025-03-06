@@ -1,6 +1,6 @@
 package com.safetynet.alerts.dto;
 
-public record FirestationResidentsDTO(
+public record FirestationResidentDTO(
         String firsName,
         String LastName,
         String address,

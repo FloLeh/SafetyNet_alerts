@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -17,7 +17,7 @@ public class MedicalRecordRepositoryFromJson implements MedicalRecordRepository 
 
     private final DataParser dataParser;
 
-    public Collection<MedicalRecord> findAll() {
+    public List<MedicalRecord> findAll() {
         return dataParser.getMedicalrecords();
     }
 
@@ -28,21 +28,21 @@ public class MedicalRecordRepositoryFromJson implements MedicalRecordRepository 
                 .findFirst();
     }
 
-    public Collection<MedicalRecord> findByLastName(String lastName) {
+    public List<MedicalRecord> findByLastName(String lastName) {
         return dataParser.getMedicalrecords()
                 .stream()
                 .filter(medicalRecord -> medicalRecord.getLastName().equals(lastName))
                 .toList();
     }
 
-    public Collection<MedicalRecord> findByLastNameIn(Collection<String> lastNames) {
+    public List<MedicalRecord> findByLastNameIn(List<String> lastNames) {
         return dataParser.getMedicalrecords()
                 .stream()
                 .filter(medicalRecord -> lastNames.contains(medicalRecord.getLastName()))
                 .toList();
     }
 
-    public Collection<MedicalRecord> findByLastNameInAndFirstNameIn(Collection<String> lastNames, Collection<String> firstNames) {
+    public List<MedicalRecord> findByLastNameInAndFirstNameIn(List<String> lastNames, List<String> firstNames) {
         return dataParser.getMedicalrecords()
                 .stream()
                 .filter(medicalRecord -> lastNames.contains(medicalRecord.getLastName()) && firstNames.contains(medicalRecord.getFirstName()))

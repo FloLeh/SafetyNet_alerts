@@ -2,11 +2,13 @@ package com.safetynet.alerts;
 
 
 import com.safetynet.alerts.model.Person;
-import com.safetynet.alerts.service.PersonService;
+import com.safetynet.alerts.service.PersonServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,10 +16,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PersonServiceTest {
 
     @Autowired
-    private PersonService personService;
+    private PersonServiceImpl personService;
 
     @Test
-    public void testSavePerson() {
+    public void testSavePerson() throws IOException {
         Person input = new Person();
         input.setFirstName("John");
         input.setLastName("Smith");

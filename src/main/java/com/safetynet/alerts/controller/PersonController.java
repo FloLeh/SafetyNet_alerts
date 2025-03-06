@@ -1,25 +1,25 @@
 package com.safetynet.alerts.controller;
 
 import com.safetynet.alerts.dto.ChildDTO;
-import com.safetynet.alerts.dto.PersonInfosDTO;
+import com.safetynet.alerts.dto.PersonWithMedicalRecordDTO;
 import com.safetynet.alerts.model.Person;
-import com.safetynet.alerts.service.PersonService;
+import com.safetynet.alerts.service.PersonServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 public class PersonController {
 
-    private final PersonService personService;
+    private final PersonServiceImpl personService;
 
     @GetMapping("/persons")
-    public Collection<Person> getPersons() {
+    public List<Person> getPersons() {
         return personService.getPersons();
     }
 
@@ -39,17 +39,17 @@ public class PersonController {
     }
 
     @GetMapping("/personInfo")
-    public Collection<PersonInfosDTO> getPersonInfoLastName(@RequestParam String lastName) {
+    public List<PersonWithMedicalRecordDTO> getPersonInfoLastName(@RequestParam String lastName) {
         return personService.getPersonInfoFromLastName(lastName);
     }
 
     @GetMapping("/childAlert")
-    public Collection<ChildDTO> getChildAlert(@RequestParam String address) {
+    public List<ChildDTO> getChildAlert(@RequestParam String address) {
         return personService.getChildrenFromAddress(address);
     }
 
     @GetMapping("/communityEmail")
-    public Collection<String> getCommunityEmail(@RequestParam String city) {
+    public List<String> getCommunityEmail(@RequestParam String city) {
         return personService.getCommunityEmailsByCity(city);
     }
 

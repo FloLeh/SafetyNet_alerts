@@ -1,20 +1,21 @@
 package com.safetynet.alerts.controller;
 
-
 import com.safetynet.alerts.model.MedicalRecord;
-import com.safetynet.alerts.service.MedicalRecordService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.safetynet.alerts.service.MedicalRecordServiceImpl;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
+@Slf4j
+@RequiredArgsConstructor
 @RestController
 public class MedicalRecordController {
 
-    @Autowired
-    MedicalRecordService medicalRecordService;
+    final MedicalRecordServiceImpl medicalRecordService;
 
-    @GetMapping("/medicalrecords")
+    @GetMapping("/medicalRecords")
     public Iterable<MedicalRecord> getMedicalRecords() {
         return medicalRecordService.getMedicalRecords();
     }
