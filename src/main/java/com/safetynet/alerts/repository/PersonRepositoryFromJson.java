@@ -43,6 +43,13 @@ public class PersonRepositoryFromJson implements PersonRepository {
                 .toList();
     }
 
+    public List<Person> findByAddressIn(List<String> addresses) {
+        return dataParser.getPersons()
+                .stream()
+                .filter(person -> addresses.contains(person.getAddress()))
+                .toList();
+    }
+
     public List<Person> findByCity(String city) {
         return dataParser.getPersons()
                 .stream()

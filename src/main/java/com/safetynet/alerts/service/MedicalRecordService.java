@@ -12,7 +12,7 @@ public interface MedicalRecordService {
     MedicalRecord updateMedicalRecord(final MedicalRecord input) throws IOException;
     void deleteMedicalRecord(final String firstName, final String lastName) throws IOException;
 
-    List<MedicalRecord> getMedicalRecordByLastName(final String lastName);
+    List<MedicalRecord> getByLastName(final String lastName);
     List<MedicalRecord> getByLastNameIn(List<String> lastNames);
     List<MedicalRecord> getByLastNameInAndFirstNameIn(List<String> lastNames, List<String> firstNames);
 }

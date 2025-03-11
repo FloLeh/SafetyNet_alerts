@@ -21,7 +21,6 @@ public class PersonServiceImpl implements PersonService {
 
     private final PersonRepository personRepository;
     private final MedicalRecordServiceImpl medicalRecordService;
-    private final DataParser dataParser;
 
     public List<Person> getPersons() {
         return personRepository.findAll();
@@ -63,7 +62,7 @@ public class PersonServiceImpl implements PersonService {
 
     public List<PersonWithMedicalRecordDTO> getPersonInfoFromLastName(String lastName) {
         List<Person> persons =  personRepository.findByLastName(lastName);
-        List<MedicalRecord> medicalRecords = medicalRecordService.getMedicalRecordByLastName(lastName);
+        List<MedicalRecord> medicalRecords = medicalRecordService.getByLastName(lastName);
 
         return persons.stream().map(person -> {
             final MedicalRecord medicalRecord = medicalRecords.stream()
@@ -97,16 +96,10 @@ public class PersonServiceImpl implements PersonService {
     }
 
     public List<Person> getByAddress(String address) {
-        return dataParser.getPersons()
-                .stream()
-                .filter(person -> person.getAddress().equals(address))
-                .toList();
+        return personRepository.findByAddress(address);
     }
 
     public List<Person> getByAddressIn(List<String> addresses) {
-        return dataParser.getPersons()
-                .stream()
-                .filter(person -> addresses.contains(person.getAddress()))
-                .toList();
+        return personRepository.findByAddressIn(addresses);
     }
 }

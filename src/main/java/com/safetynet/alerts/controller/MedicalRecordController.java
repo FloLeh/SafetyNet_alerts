@@ -16,21 +16,40 @@ public class MedicalRecordController {
 
     final MedicalRecordServiceImpl medicalRecordService;
 
+    /**
+     * Read - Get all the medical records
+     * @return A list of medical record
+     */
     @GetMapping("/medicalRecords")
     public List<MedicalRecord> getMedicalRecords() {
         return medicalRecordService.getMedicalRecords();
     }
 
+    /**
+     * Create - Create a new medical record
+     * @param medicalRecord A medical record
+     * @return The new medical record
+     */
     @PostMapping("/medicalRecord")
     public MedicalRecord addMedicalRecord(@RequestBody MedicalRecord medicalRecord) throws IOException {
         return medicalRecordService.saveMedicalRecord(medicalRecord);
     }
 
+    /**
+     * Update - Save medical record
+     * @param medicalRecord A medical record
+     * @return The updated medical record
+     */
     @PutMapping("/medicalRecord")
     public MedicalRecord updateMedicalRecord(@RequestBody MedicalRecord medicalRecord) throws IOException {
         return medicalRecordService.updateMedicalRecord(medicalRecord);
     }
 
+    /**
+     * Delete - Delete a medical record
+     * @param firstName A first name to identify
+     * @param lastName A last name to identify
+     */
     @DeleteMapping("/medicalRecord")
     public void deleteMedicalRecord(@RequestParam String firstName, @RequestParam String lastName) throws IOException {
         medicalRecordService.deleteMedicalRecord(firstName, lastName);

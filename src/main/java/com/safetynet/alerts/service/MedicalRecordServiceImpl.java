@@ -45,7 +45,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
         medicalRecordRepository.delete(medicalRecord);
     }
 
-    public List<MedicalRecord> getMedicalRecordByLastName(final String lastName) {
+    public List<MedicalRecord> getByLastName(final String lastName) {
         return medicalRecordRepository.findByLastName(lastName);
     }
 
