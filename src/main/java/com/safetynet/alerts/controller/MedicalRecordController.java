@@ -22,6 +22,7 @@ public class MedicalRecordController {
      */
     @GetMapping("/medicalRecords")
     public List<MedicalRecord> getMedicalRecords() {
+        log.info("GET: /medicalRecords");
         return medicalRecordService.getMedicalRecords();
     }
 
@@ -32,6 +33,7 @@ public class MedicalRecordController {
      */
     @PostMapping("/medicalRecord")
     public MedicalRecord addMedicalRecord(@RequestBody MedicalRecord medicalRecord) throws IOException {
+        log.info("POST: /medicalRecord");
         return medicalRecordService.saveMedicalRecord(medicalRecord);
     }
 
@@ -42,6 +44,7 @@ public class MedicalRecordController {
      */
     @PutMapping("/medicalRecord")
     public MedicalRecord updateMedicalRecord(@RequestBody MedicalRecord medicalRecord) throws IOException {
+        log.info("PUT: /medicalRecord");
         return medicalRecordService.updateMedicalRecord(medicalRecord);
     }
 
@@ -52,6 +55,7 @@ public class MedicalRecordController {
      */
     @DeleteMapping("/medicalRecord")
     public void deleteMedicalRecord(@RequestParam String firstName, @RequestParam String lastName) throws IOException {
+        log.info("DELETE: /medicalRecord");
         medicalRecordService.deleteMedicalRecord(firstName, lastName);
     }
 

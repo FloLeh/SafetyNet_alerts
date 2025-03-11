@@ -24,6 +24,7 @@ public class PersonController {
      */
     @GetMapping("/persons")
     public List<Person> getPersons() {
+        log.info("GET: /persons");
         return personService.getPersons();
     }
 
@@ -34,6 +35,7 @@ public class PersonController {
      */
     @PostMapping("/person")
     public Person addPerson(@RequestBody Person person) throws IOException {
+        log.info("POST: /person");
         return personService.savePerson(person);
     }
 
@@ -44,6 +46,7 @@ public class PersonController {
      */
     @PutMapping("/person")
     public Person updatePerson(@RequestBody Person person) throws IOException {
+        log.info("PUT: /person");
         return personService.updatePerson(person);
     }
 
@@ -54,6 +57,7 @@ public class PersonController {
      */
     @DeleteMapping("/person")
     public void deletePerson(@RequestParam String firstName, @RequestParam String lastName) throws IOException {
+        log.info("DELETE: /person");
         personService.deletePerson(firstName, lastName);
     }
 
@@ -64,6 +68,7 @@ public class PersonController {
      */
     @GetMapping("/personInfo")
     public List<PersonWithMedicalRecordDTO> getPersonInfoLastName(@RequestParam String lastName) {
+        log.info("GET: /personInfo?lastName={}", lastName);
         return personService.getPersonInfoFromLastName(lastName);
     }
 
@@ -74,6 +79,7 @@ public class PersonController {
      */
     @GetMapping("/childAlert")
     public List<ChildDTO> getChildAlert(@RequestParam String address) {
+        log.info("GET: /childAlert?address={}", address);
         return personService.getChildrenFromAddress(address);
     }
 
@@ -84,6 +90,7 @@ public class PersonController {
      */
     @GetMapping("/communityEmail")
     public List<String> getCommunityEmail(@RequestParam String city) {
+        log.info("GET: /communityEmail?city={}", city);
         return personService.getCommunityEmailsByCity(city);
     }
 
