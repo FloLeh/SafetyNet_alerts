@@ -1,4 +1,4 @@
-package com.safetynet.alerts;
+package com.safetynet.alerts.service;
 
 import com.safetynet.alerts.dto.FirestationResidentWithMedicalRecordDTO;
 import com.safetynet.alerts.dto.FirestationResidentsByAddressDTO;
@@ -7,9 +7,6 @@ import com.safetynet.alerts.model.Firestation;
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.FirestationRepository;
-import com.safetynet.alerts.service.FirestationServiceImpl;
-import com.safetynet.alerts.service.MedicalRecordServiceImpl;
-import com.safetynet.alerts.service.PersonServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

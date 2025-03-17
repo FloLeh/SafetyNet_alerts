@@ -1,12 +1,10 @@
-package com.safetynet.alerts;
+package com.safetynet.alerts.service;
 
 import com.safetynet.alerts.dto.ChildDTO;
 import com.safetynet.alerts.dto.PersonWithMedicalRecordDTO;
 import com.safetynet.alerts.model.MedicalRecord;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.PersonRepository;
-import com.safetynet.alerts.service.MedicalRecordServiceImpl;
-import com.safetynet.alerts.service.PersonServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
