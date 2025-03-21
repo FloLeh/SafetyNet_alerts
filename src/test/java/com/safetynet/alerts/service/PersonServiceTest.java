@@ -37,22 +37,10 @@ public class PersonServiceTest {
 
     @BeforeAll
     static void setUp() {
-        Person person = new Person();
-        person.setFirstName("John");
-        person.setLastName("Smith");
-        person.setAddress("123 Main St");
-        person.setCity("San Francisco");
-        person.setZip("94105");
-        person.setPhone("555-555-5555");
-        person.setEmail("john.smith@gmail.com");
+        Person person = new Person("John", "Smith", "123 Main St", "San Francisco", "94105", "555-555-5555", "john.smith@gmail.com");
         persons.add(person);
 
-        MedicalRecord medicalRecord = new MedicalRecord();
-        medicalRecord.setFirstName("John");
-        medicalRecord.setLastName("Smith");
-        medicalRecord.setBirthdate(LocalDate.of(2010, 1 ,1));
-        medicalRecord.setMedications(List.of("Doliprane"));
-        medicalRecord.setAllergies(List.of("Peanuts"));
+        MedicalRecord medicalRecord = new MedicalRecord("John", "Smith", LocalDate.of(2010, 1 ,1), List.of("Doliprane"), List.of("Peanuts"));
         medicalRecords.add(medicalRecord);
     }
 

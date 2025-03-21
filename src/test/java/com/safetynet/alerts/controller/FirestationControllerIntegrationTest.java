@@ -47,9 +47,7 @@ public class FirestationControllerIntegrationTest  {
 
     @Test
     public void testAddFirestation() throws Exception {
-        Firestation firestation = new Firestation();
-        firestation.setAddress("123 Main St");
-        firestation.setStation(1);
+        Firestation firestation = new Firestation("123 Main St", 1);
 
         mockMvc.perform(post("/firestation").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(firestation)))
                 .andExpect(status().isOk())
@@ -59,9 +57,7 @@ public class FirestationControllerIntegrationTest  {
 
     @Test
     public void testUpdateFirestation() throws Exception {
-        Firestation firestation = new Firestation();
-        firestation.setAddress("29 15th St");
-        firestation.setStation(4);
+        Firestation firestation = new Firestation("29 15th St", 4);
 
         mockMvc.perform(put("/firestation").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(firestation)))
                 .andExpect(status().isOk())

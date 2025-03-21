@@ -47,14 +47,7 @@ public class PersonControllerIntegrationTest {
 
     @Test
     public void testAddPerson() throws Exception {
-        Person person = new Person();
-        person.setFirstName("John");
-        person.setLastName("Doe");
-        person.setAddress("123 Main St");
-        person.setCity("San Francisco");
-        person.setZip("94105");
-        person.setPhone("555-555-5555");
-        person.setEmail("john@doe.com");
+        Person person = new Person("John", "Doe", "123 Main St", "San Francisco", "94105", "555-555-5555", "john@doe.com");
 
         mockMvc.perform(post("/person").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(person)))
                 .andExpect(status().isOk())
@@ -69,14 +62,7 @@ public class PersonControllerIntegrationTest {
 
     @Test
     public void testUpdatePerson() throws Exception {
-        Person person = new Person();
-        person.setFirstName("John");
-        person.setLastName("Boyd");
-        person.setAddress("123 Main St");
-        person.setCity("San Francisco");
-        person.setZip("94105");
-        person.setPhone("555-555-5555");
-        person.setEmail("john@boyd.com");
+        Person person = new Person("John", "Boyd", "123 Main St", "San Francisco", "94105", "555-555-5555", "john@boyd.com");
 
         mockMvc.perform(put("/person").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(person)))
                 .andExpect(status().isOk())

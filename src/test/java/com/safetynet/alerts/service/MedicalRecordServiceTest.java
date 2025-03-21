@@ -31,12 +31,7 @@ public class MedicalRecordServiceTest {
 
     @BeforeAll
     static void setUp() {
-        MedicalRecord medicalRecord = new MedicalRecord();
-        medicalRecord.setFirstName("John");
-        medicalRecord.setLastName("Smith");
-        medicalRecord.setBirthdate(LocalDate.of(2010, 1 ,1));
-        medicalRecord.setMedications(List.of("Doliprane"));
-        medicalRecord.setAllergies(List.of("Peanuts"));
+        MedicalRecord medicalRecord = new MedicalRecord("John", "Smith", LocalDate.of(2010, 1 ,1), List.of("Doliprane"), List.of("Peanuts"));
         medicalRecords.add(medicalRecord);
     }
 

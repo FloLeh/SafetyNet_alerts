@@ -12,7 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -46,12 +46,8 @@ public class MedicalRecordControllerIntegrationTest {
 
     @Test
     public void testAddMedicalRecord() throws Exception {
-        MedicalRecord medicalRecord = new MedicalRecord();
-        medicalRecord.setFirstName("John");
-        medicalRecord.setLastName("Doe");
-        medicalRecord.setBirthdate(LocalDate.of(1990, 1, 1));
-        medicalRecord.setMedications(new ArrayList<>());
-        medicalRecord.setAllergies(new ArrayList<>());
+        MedicalRecord medicalRecord = new MedicalRecord("John", "Doe", LocalDate.of(1990, 1, 1), List.of(), List.of());
+
 
         mockMvc.perform(post("/medicalRecord").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(medicalRecord)))
                 .andExpect(status().isOk())
@@ -62,12 +58,7 @@ public class MedicalRecordControllerIntegrationTest {
 
     @Test
     public void testUpdateMedicalRecord() throws Exception {
-        MedicalRecord medicalRecord = new MedicalRecord();
-        medicalRecord.setFirstName("John");
-        medicalRecord.setLastName("Boyd");
-        medicalRecord.setBirthdate(LocalDate.of(1990, 1, 1));
-        medicalRecord.setMedications(new ArrayList<>());
-        medicalRecord.setAllergies(new ArrayList<>());
+        MedicalRecord medicalRecord = new MedicalRecord("John", "Boyd", LocalDate.of(1990, 1, 1), List.of(), List.of());
 
         mockMvc.perform(put("/medicalRecord").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(medicalRecord)))
                 .andExpect(status().isOk())

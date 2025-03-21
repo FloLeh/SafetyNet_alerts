@@ -47,27 +47,13 @@ public class FirestationServiceTest {
 
     @BeforeAll
     static void setUp() {
-        Person person = new Person();
-        person.setFirstName(firstName);
-        person.setLastName(lastName);
-        person.setAddress(address);
-        person.setCity("San Francisco");
-        person.setZip("94105");
-        person.setPhone("555-555-5555");
-        person.setEmail("john.smith@gmail.com");
+        Person person = new Person(firstName, lastName, address, "San Francisco", "94105", "555-555-5555", "john.smith@gmail.com");
         persons.add(person);
 
-        MedicalRecord medicalRecord = new MedicalRecord();
-        medicalRecord.setFirstName(firstName);
-        medicalRecord.setLastName(lastName);
-        medicalRecord.setBirthdate(LocalDate.of(2010, 1 ,1));
-        medicalRecord.setMedications(List.of("Doliprane"));
-        medicalRecord.setAllergies(List.of("Peanuts"));
+        MedicalRecord medicalRecord = new MedicalRecord(firstName, lastName, LocalDate.of(2010, 1 ,1), List.of("Doliprane"), List.of("Peanuts"));
         medicalRecords.add(medicalRecord);
 
-        Firestation firestation = new Firestation();
-        firestation.setStation(1);
-        firestation.setAddress(address);
+        Firestation firestation = new Firestation(address, 1);
         firestations.add(firestation);
     }
 
