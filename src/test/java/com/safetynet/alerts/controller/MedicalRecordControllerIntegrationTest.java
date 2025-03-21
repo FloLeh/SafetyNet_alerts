@@ -1,20 +1,18 @@
 package com.safetynet.alerts.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.alerts.DataParserMock;
 import com.safetynet.alerts.model.MedicalRecord;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -23,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class MedicalRecordControllerIntegrationTest extends AbstractControllerIntegrationTest {
+public class MedicalRecordControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -31,16 +29,19 @@ public class MedicalRecordControllerIntegrationTest extends AbstractControllerIn
     @Autowired
     private ObjectMapper objectMapper;
 
-    @AfterEach
-    public void tearDown() throws Exception {
-        this.cleanDatabase();
+    @Autowired
+    DataParserMock dataParser;
+
+    @BeforeEach
+    public void tearDown() {
+        dataParser.reset();
     }
 
     @Test
     public void testGetMedicalRecords() throws Exception {
         mockMvc.perform(get("/medicalRecords"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(greaterThan(0))));
+                .andExpect(jsonPath("$", hasSize(dataParser.getMedicalrecords().size())));
     }
 
     @Test
@@ -77,10 +78,7 @@ public class MedicalRecordControllerIntegrationTest extends AbstractControllerIn
 
     @Test
     public void testDeleteMedicalRecord() throws Exception {
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.put("firstName", List.of("Jacob"));
-        map.put("lastName", List.of("Boyd"));
-        mockMvc.perform(delete("/medicalRecord").params(map))
+        mockMvc.perform(delete("/medicalRecord").param("firstName", "John").param("lastName", "Boyd"))
                 .andExpect(status().isOk());
     }
 }

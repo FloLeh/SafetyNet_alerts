@@ -1,14 +1,18 @@
 package com.safetynet.alerts.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.alerts.DataParserMock;
 import com.safetynet.alerts.model.Firestation;
-import org.junit.jupiter.api.AfterEach;
+import com.safetynet.alerts.model.Person;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -18,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class FirestationControllerIntegrationTest extends AbstractControllerIntegrationTest {
+public class FirestationControllerIntegrationTest  {
 
     @Autowired
     private MockMvc mockMvc;
@@ -26,16 +30,19 @@ public class FirestationControllerIntegrationTest extends AbstractControllerInte
     @Autowired
     private ObjectMapper objectMapper;
 
-    @AfterEach
-    public void tearDown() throws Exception {
-        this.cleanDatabase();
+    @Autowired
+    DataParserMock dataParser;
+
+    @BeforeEach
+    public void tearDown() {
+        dataParser.reset();
     }
 
     @Test
     public void testGetAllFirestations() throws Exception {
         mockMvc.perform(get("/firestations"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(greaterThan(0))));
+                .andExpect(jsonPath("$", hasSize(dataParser.getFirestations().size())));
     }
 
     @Test
@@ -54,45 +61,75 @@ public class FirestationControllerIntegrationTest extends AbstractControllerInte
     public void testUpdateFirestation() throws Exception {
         Firestation firestation = new Firestation();
         firestation.setAddress("29 15th St");
-        firestation.setStation(2);
+        firestation.setStation(4);
 
         mockMvc.perform(put("/firestation").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(firestation)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.station", is(2)));
+                .andExpect(jsonPath("$.station", is(4)));
     }
 
     @Test
     public void testDeleteFirestation() throws Exception {
-        mockMvc.perform(delete("/firestation").param("address", "834 Binoc Ave"))
+        mockMvc.perform(delete("/firestation").param("address", "1509 Culver St"))
                 .andExpect(status().isOk());
     }
 
 
     @Test
     public void testGetResidentsByStation() throws Exception {
-        mockMvc.perform(get("/firestation").param("stationNumber", "1"))
+        List<String> firestationAddresses = dataParser.getFirestations().stream()
+                .filter(firestation -> firestation.getStation().equals(3))
+                .map(Firestation::getAddress)
+                .toList();
+        int residentsNumber = dataParser.getPersons().stream()
+                .filter(person -> firestationAddresses.contains(person.getAddress()))
+                .toList()
+                .size();
+
+        mockMvc.perform(get("/firestation").param("stationNumber", "3"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.residents", hasSize(greaterThan(0))));
+                .andExpect(jsonPath("$.residents", hasSize(residentsNumber)));
     }
 
     @Test
     public void testGetPhoneAlert() throws Exception {
-        mockMvc.perform(get("/phoneAlert").param("firestation", "1"))
+        List<String> firestationAddresses = dataParser.getFirestations().stream()
+                .filter(firestation -> firestation.getStation().equals(3))
+                .map(Firestation::getAddress)
+                .toList();
+        int phoneNumbers = dataParser.getPersons().stream()
+                .filter(person -> firestationAddresses.contains(person.getAddress()))
+                .map(Person::getPhone)
+                .distinct()
+                .toList()
+                .size();
+
+        mockMvc.perform(get("/phoneAlert").param("firestation", "3"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(greaterThan(0))));
+                .andExpect(jsonPath("$", hasSize(phoneNumbers)));
     }
 
     @Test
     public void testGetFirestationResidents() throws Exception {
+        int residentsNumber = dataParser.getPersons().stream()
+                .filter(person -> person.getAddress().equals("1509 Culver St"))
+                .toList()
+                .size();
+
         mockMvc.perform(get("/fire").param("address", "1509 Culver St"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.residents", hasSize(greaterThan(0))));
+                .andExpect(jsonPath("$.residents", hasSize(residentsNumber)));
     }
 
     @Test
     public void testGetHousesByFirestations() throws Exception {
-        mockMvc.perform(get("/flood/stations").param("stations", "1"))
+        int result = dataParser.getPersons().stream()
+                .filter(person -> person.getAddress().equals("1509 Culver St"))
+                .toList()
+                .size();
+
+        mockMvc.perform(get("/flood/stations").param("stations", "3"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$['908 73rd St']", hasSize(greaterThan(0))));
+                .andExpect(jsonPath("$['1509 Culver St']", hasSize(result)));
     }
 }

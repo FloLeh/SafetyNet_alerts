@@ -51,7 +51,7 @@ public class MedicalRecordRepositoryFromJson implements MedicalRecordRepository 
 
     public MedicalRecord save(MedicalRecord medicalRecord) throws IOException {
         dataParser.getMedicalrecords().add(medicalRecord);
-        dataParser.saveIntoJsonFile();
+        dataParser.save();
         return medicalRecord;
     }
 
@@ -64,13 +64,13 @@ public class MedicalRecordRepositoryFromJson implements MedicalRecordRepository 
                     recordToUpdate.setMedications(medicalRecord.getMedications());
                     recordToUpdate.setAllergies(medicalRecord.getAllergies());
                 });
-        dataParser.saveIntoJsonFile();
+        dataParser.save();
         return medicalRecord;
     }
 
     public void delete(MedicalRecord medicalRecord) throws IOException {
         dataParser.getMedicalrecords().remove(medicalRecord);
-        dataParser.saveIntoJsonFile();
+        dataParser.save();
     }
 
 }

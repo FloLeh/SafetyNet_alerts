@@ -59,7 +59,7 @@ public class PersonRepositoryFromJson implements PersonRepository {
 
     public Person save(Person person) throws IOException {
         dataParser.getPersons().add(person);
-        dataParser.saveIntoJsonFile();
+        dataParser.save();
         return person;
     }
 
@@ -74,13 +74,13 @@ public class PersonRepositoryFromJson implements PersonRepository {
                         personToUpdate.setPhone(person.getPhone());
                         personToUpdate.setEmail(person.getEmail());
                 });
-        dataParser.saveIntoJsonFile();
+        dataParser.save();
         return person;
     }
 
     public void delete(Person person) throws IOException {
         dataParser.getPersons().remove(person);
-        dataParser.saveIntoJsonFile();
+        dataParser.save();
     }
 
 

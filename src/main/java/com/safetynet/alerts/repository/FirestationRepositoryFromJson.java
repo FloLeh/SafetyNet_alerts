@@ -45,7 +45,7 @@ public class FirestationRepositoryFromJson implements FirestationRepository {
 
     public Firestation save(Firestation firestation) throws IOException {
         dataParser.getFirestations().add(firestation);
-        dataParser.saveIntoJsonFile();
+        dataParser.save();
         return firestation;
     }
 
@@ -54,17 +54,17 @@ public class FirestationRepositoryFromJson implements FirestationRepository {
                 .stream()
                 .filter(firestationToUpdate -> firestationToUpdate.getAddress().equals(firestation.getAddress()))
                 .forEach(firestationToUpdate -> firestationToUpdate.setAddress(firestation.getAddress()));
-        dataParser.saveIntoJsonFile();
+        dataParser.save();
         return firestation;
     }
 
     public void delete(Firestation firestation) throws IOException {
         dataParser.getFirestations().remove(firestation);
-        dataParser.saveIntoJsonFile();
+        dataParser.save();
     }
 
     public void deleteAll(List<Firestation> fireStations) throws IOException {
         dataParser.getFirestations().removeAll(fireStations);
-        dataParser.saveIntoJsonFile();
+        dataParser.save();
     }
 }
